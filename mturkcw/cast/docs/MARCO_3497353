@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_3497353</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+Replication is the process of copying a database to another server, and then keeping the two copies in sync, so that they behave as near as possible. Replication copies data or changes of data from one database to an another.Accessing the first database or the second, it does not matter because they are the same, i.e. they are in sync. Replication is not limited to two databases, any number of database can take place into the replication model.It does not mean that the replicated databases are exactly the same, because replication can be configured that only a subset of tables or columns or rows will be replicated, i.e. partial replication.eplication copies data or changes of data from one database to an another. Accessing the first database or the second, it does not matter because they are the same, i.e. they are in sync. Replication is not limited to two databases, any number of database can take place into the replication model.
+</BODY>
+</HTML>
+</DOC>
+

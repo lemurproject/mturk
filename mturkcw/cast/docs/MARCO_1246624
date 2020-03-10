@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_1246624</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+NSQ: realtime distributed message processing at scale NSQ is a realtime message processing system designed to operate at bitlyâs scale, handling billions of messages per day. It promotes distributed and decentralized topologies without single points of failure, enabling fault tolerance and high availability coupled with a reliable message delivery guarantee.
+</BODY>
+</HTML>
+</DOC>
+

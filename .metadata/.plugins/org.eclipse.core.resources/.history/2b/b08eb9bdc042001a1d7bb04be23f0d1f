@@ -1,0 +1,19 @@
+package com.example.springboot;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
+@Component("helloService")
+public class HelloService {
+	
+	public String getName() {
+		return "Autowired";
+	}
+	
+	public Map<Integer, Map<Integer, String>> getQueries() {
+		
+		return null;
+	}
+
+}

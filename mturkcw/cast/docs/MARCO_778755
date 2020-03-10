@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_778755</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+All the data in this guide is stored in the docs-examples Firebase database; a read-only version of the app dashboard can be viewed by going to the Firebase URL in a browser.It's possible to directly access child nodes in the data as well.f we try to store an array, it really gets stored as an object with integers as the key names. However, to help developers that are storing arrays in a Firebase database, when data is read using value or via the REST api, if the data looks like an array, Firebase clients will render it as an array.
+</BODY>
+</HTML>
+</DOC>
+

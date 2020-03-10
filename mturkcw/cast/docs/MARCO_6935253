@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_6935253</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+You absolutely still need BW. The HANA DB is an excellent foundation and database for a BW Data Warehouse. In addition, HANA data models complement BW on HANA with agile data modeling for real-real-time data and non-SAP data. These HANA custom data mart data/schema can also be consumed in SAP BW.
+</BODY>
+</HTML>
+</DOC>
+

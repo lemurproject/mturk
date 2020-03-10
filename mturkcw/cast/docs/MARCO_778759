@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_778759</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+All Firebase database data is stored as JSON objects. There are no tables or records. When we add data to the JSON tree, it becomes a key in the existing JSON structure. For example, if we added a child named widgets under users/mchen/ , our data looks as follows:owever, to help developers that are storing arrays in a Firebase database, when data is read using val() or via the REST api, if the data looks like an array, Firebase clients will render it as an array.
+</BODY>
+</HTML>
+</DOC>
+

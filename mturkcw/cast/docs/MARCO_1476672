@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_1476672</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+An application context is a set of name-value pairs that Oracle Database stores in memory. The application context has a label called a namespace, for example, empno_ctx for an application context that retrieves employee IDs.
+</BODY>
+</HTML>
+</DOC>
+

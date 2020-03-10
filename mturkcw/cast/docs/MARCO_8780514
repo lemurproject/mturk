@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_8780514</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+TIMESTAMP WITH LOCAL TIME ZONE is another variant of TIMESTAMP. It differs from TIMESTAMP WITH TIME ZONE as follows: data stored in the database is normalized to the database time zone, and the time zone offset is not stored as part of the column data.
+</BODY>
+</HTML>
+</DOC>
+

@@ -1,0 +1,96 @@
+1	31_1 What is throat cancer?
+2	31_2 Is it treatable?
+3	31_3 Tell me about lung cancer.
+4	31_4 What are its symptoms?
+5	31_5 Can it spread to the throat?
+6	31_6 What causes throat cancer?
+7	31_7 What is the first sign of it?
+8	31_8 Is it the same as esophageal cancer?
+9	33_1 Tell me about the Neverending Story film.
+10	33_2 What is it about?
+11	33_3 How was it received?
+12	33_4 Did it win any awards?
+13	33_5 Was it a book first?
+14	33_6 Who was the author and when what it published?
+15	33_7 What are the main themes?
+16	33_8 Who are the main characters?
+17	37_1 What was the Stanford Experiment?
+18	37_2 What did it show?
+19	37_3 Tell me about the author of the experiment.
+20	37_4 Was it ethical?
+21	37_5 What are other similar experiments?
+22	37_6 What happened in the Milgram experiment?
+23	37_7 Why was it important?
+24	37_8 What were the similarities and differences between the studies?
+25	40_1 What are the origins of popular music?
+26	40_2 What are its characteristics?
+27	40_3 What technological developments enabled it?
+28	40_4 When and why did people start taking pop seriously?
+29	40_5 How has it been integrated into music education?
+30	40_6 Describe some of the influential pop bands.
+31	40_7 What makes a song pop punk?
+32	40_8 What is the difference between it and emo?
+33	49_1 How was Netflix started?
+34	49_2 How did it originally work?
+35	49_3 What is its relationship with Blockbuster?
+36	49_4 When did Netflix shift from DVDs to a streaming service?
+37	49_5 What are its other competitors?
+38	49_6 How does it compare to Amazon Prime Video?
+39	49_7 Describe it’s subscriber growth over time.
+40	49_8 How has it changed the way TV is watched?
+41	50_1 What was the first artificial satellite?
+42	50_2 What are the types of orbits?
+43	50_3 What are the important classes of satellite?
+44	50_4 How do navigation systems work?
+45	50_5 What is the Galileo system and why is it important?
+46	50_6 Why did it create tension with the US?
+47	50_7 What are Cubesats?
+48	50_8 What are their advantages?
+49	54_1 What is worth seeing in Washington D.C.?
+50	54_2 Which Smithsonian museums are the most popular?
+51	54_3 Why is the National Air and Space Museum important?
+52	54_4 Is the Spy Museum free?
+53	54_5 What is there to do in DC after the museums close?
+54	54_6 What is the best time to visit the reflecting pools?
+55	54_7 Are there any famous foods?
+56	54_8 What is a DC half smoke?
+57	58_1 What is a real-time database?
+58	58_2 How does it differ from traditional ones?
+59	58_3 What are the advantages of real-time processing?
+60	58_4 What are examples of important ones?
+61	58_5  What are important applications?
+62	58_6 What are important cloud options?
+63	58_7 Tell me about the Firebase DB.
+64	58_8 How is it used in mobile apps?
+65	61_1 Who are The Avengers?
+66	61_2 Tell me about their first appearance.
+67	61_3 Who is the most powerful and why?
+68	61_4 What is the relationship of Spider-Man to the team?
+69	61_5 Why is Batman not a member?
+70	61_6 What is an important team in the DC universe?
+71	61_7 Tell me about the origins of the Justice League.
+72	61_8 Who are the important members?
+73	67_1 Why is blood red?
+74	67_2 What are red blood cells?
+75	67_3 How are they created?
+76	67_4 How is oxygen transported?
+77	67_5 What is anemia?
+78	67_6 What are the symptoms?
+79	67_7 Can it go away?
+80	67_8 What are its possible causes?
+81	75_1 Why do turkey and Turkey share the same name?
+82	75_2 Where are turkeys from?
+83	75_3 What was their importance in native cultures?
+84	75_4 When and how were they domesticated?
+85	75_5 Can they fly?
+86	75_6 Why did Ben Franklin want it to be the national symbol?
+87	75_7 How did he cook it?
+88	75_8 Why is it eaten on Thanksgiving?
+89	79_1 What is taught in sociology?
+90	79_2 What is the main contribution of Auguste Comte?
+91	79_3 What is the role of positivism in it?
+92	79_4 What is Herbert Spencer known for?
+93	79_5 How is his work related to Comte?
+94	79_6 What is the functionalist theory?
+95	79_7 What is its main criticism?
+96	79_8 How does it compare to conflict theory?

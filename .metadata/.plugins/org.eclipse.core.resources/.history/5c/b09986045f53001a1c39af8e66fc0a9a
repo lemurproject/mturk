@@ -1,0 +1,5 @@
+package org.lemurproject.cw;
+
+public class SearchResult {
+
+}

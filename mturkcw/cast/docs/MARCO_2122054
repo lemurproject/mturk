@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_2122054</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+The data structures used by NoSQL databases (e.g. key-value, graph, or document) differ slightly from those used by default in relational databases, making some operations faster in NoSQL and others faster in relational databases.ometimes the data structures used by NoSQL databases are also viewed as more flexible than relational database tables. NoSQL databases are increasingly used in big data and real-time web applications. NoSQL systems are also sometimes called Not only SQL to emphasize that they may support SQL-like query languages.
+</BODY>
+</HTML>
+</DOC>
+

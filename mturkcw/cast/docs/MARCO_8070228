@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_8070228</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+Right click Databases Attachâ¦ option from the drop down list as shown in the snippet below. 3. In Attach Databases dialog box click on Addâ¦ button as shown in the snippet below. 4. In Locate Database Files dialog box select the .MDF file of the database and click OK to return to Attach Database dialog box.5. In Attach Databases dialog box; under Databases to attach and Database Details you will see all the relevant information with respect to the database which you are attaching in SQL Server.Finally, click OK to attach the database to SQL Server.ight click Databases Attachâ¦ option from the drop down list as shown in the snippet below. 3. In Attach Databases dialog box click on Addâ¦ button as shown in the snippet below. 4. In Locate Database Files dialog box select the .MDF file of the database and click OK to return to Attach Database dialog box.
+</BODY>
+</HTML>
+</DOC>
+

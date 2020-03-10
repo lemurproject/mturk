@@ -1,0 +1,10 @@
+INDEX VERSION 1.4+C:\workspace\mturk\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+816033612.index
+3135229251.index
+693019776.index
+723954200.index
+864443806.index
+723954200.index
+2758360145.index
+1381802620.index
+1388657677.index

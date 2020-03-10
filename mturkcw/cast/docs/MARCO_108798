@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_108798</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+Q.What is the difference between common mode impedance, differential mode impedance and characteristic impedance? A. Common mode impedance: refers to a characteristic in response to common mode signals (noise). Differential mode impedance: refers to a characteristic in response to leakage inductance. Characteristic impedance: refers to the line impedance when two lines of a common mode filter / choke are considered as a differential transmission line. It has no correlation with the common mode impedance. It is determined by the balance between the leakage impedance and the line capacity.
+</BODY>
+</HTML>
+</DOC>
+

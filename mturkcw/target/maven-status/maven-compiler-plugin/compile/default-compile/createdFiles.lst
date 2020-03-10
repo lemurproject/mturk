@@ -1,0 +1,6 @@
+org\lemurproject\cw\GlobalProperties.class
+org\lemurproject\cw\SearchResult.class
+org\lemurproject\cw\SearchService.class
+org\lemurproject\cw\CWApplication.class
+org\lemurproject\cw\SearchController.class
+org\lemurproject\cw\SearchObject.class

@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_8708797</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+4. What are the three major activities of an operating system in regard to secondary-storage management? Answer: i. Free-space management. ii. Storage allocation. iii. Disk scheduling. 5. What is the purpose of system programs? Answer: System programs can be thought of as bundles of useful system calls. They provide basic functionality to users so that users do not need to write their own programs to solve common problems. 6. What is the main advantage of the layered approach to system design? What are the disadvantages of using the layered approach? Answer: As in all cases of modular design, designing an operating system in a modular way has several advantages. The system is
+</BODY>
+</HTML>
+</DOC>
+

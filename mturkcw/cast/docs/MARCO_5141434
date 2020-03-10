@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_5141434</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+Oracle Coherence. vs. BlueTalon. Relational online analytical processing (ROLAP) is a form of online analytical processing (OLAP) that performs dynamic multidimensional analysis of data stored in a relational database rather than in a multidimensional database (which is usually considered the OLAP standard).therwise, the query is created on the fly from the user request. Microsoft Access's PivotTable is an example of a three-tiered architecture. Since ROLAP uses a relational database, it requires more processing time and/or disk space to perform some of the tasks that multidimensional databases are designed for.
+</BODY>
+</HTML>
+</DOC>
+

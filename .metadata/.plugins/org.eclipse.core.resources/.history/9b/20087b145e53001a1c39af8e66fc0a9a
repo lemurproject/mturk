@@ -1,0 +1,28 @@
+package org.lemurproject.cw;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.CloudSolrClient.Builder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component("searchService")
+public class SearchService {
+	
+	@Autowired
+	private GlobalProperties searchProps;
+	
+	public SearchService() {
+		List<String> zkHosts = new ArrayList<String>();
+		String zkHost = String.join(":", searchProps.getHostName(), searchProps.getHostPort());
+		zkHosts.add(zkHost);
+		Builder builder = new CloudSolrClient.Builder(zkHosts, java.util.Optional.empty());
+		CloudSolrClient solrClient = builder.build();
+		solrClient.setDefaultCollection(searchProps.getCollectionName());
+	}
+
+
+
+}

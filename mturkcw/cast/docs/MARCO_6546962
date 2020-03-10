@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_6546962</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+1 Database as a service (DBaaS) - some cloud platforms offer options for using a database as a service, without physically launching a virtual machine instance for the database. 2  In this configuration, application owners do not have to install and maintain the database on their own.
+</BODY>
+</HTML>
+</DOC>
+

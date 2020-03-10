@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_6949252</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+I am trying to write a simple query that tells me how many different values there are. For example, if I have 10 different value and each one is repeated 10 times, I still have 10 different values. This is a DB for a car manufacturer.
+</BODY>
+</HTML>
+</DOC>
+

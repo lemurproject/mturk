@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_8306646</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+My team is thinking about developing a real time application (a bunch of charts, gauges etc) reading from the database. At the backend we have a high volume Teradata database. We expect some other applications to be constantly feeding in data into this database.Now we are wondering about how to feed in the changes from the database to the application.Polling from the application would not be a viable option in our case.ut in our case client asked us to provide daily changes to a purchase orders table. That means we had to run a batch of scripts every day to capture the changes occuring to the table. So we started to collect data every day and store the data in a sparse history format in another table. So the process is simple here.
+</BODY>
+</HTML>
+</DOC>
+

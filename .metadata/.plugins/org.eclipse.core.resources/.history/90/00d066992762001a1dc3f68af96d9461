@@ -1,0 +1,23 @@
+package org.lemurproject.cw;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class SearchResult {
+
+	private String docId;
+	private Float score;
+	public Float getScore() {
+		return score;
+	}
+	public void setScore(Float score) {
+		this.score = score;
+	}
+	public String getDocId() {
+		return docId;
+	}
+	public void setDocId(String docId) {
+		this.docId = docId;
+	}
+	
+}

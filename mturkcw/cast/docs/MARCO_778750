@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_778750</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+Data stored in a Firebase database is retrieved by attaching an asynchronous listener to a database reference. The listener will be triggered once for the initial state of the data and again anytime the data changes.he child_added event is typically used when retrieving a list of items from the database. Unlike value which returns the entire contents of the location, child_added is triggered once for each existing child and then again every time a new child is added to the specified path.
+</BODY>
+</HTML>
+</DOC>
+

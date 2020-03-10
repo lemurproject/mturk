@@ -1,0 +1,12 @@
+<DOC>
+<DOCNO>MARCO_7948303</DOCNO>
+<DOCHDR>
+
+</DOCHDR>
+<HTML>
+<BODY>
+To start the database server: 1  In the Services window, right-click the Java DB node and choose Start Server. 2  Right-click the Java DB node and choose Create Database to open the Create Java DB Database dialog. 3  Type. 4  for the Database Name. 5  Type. 6  for the User Name and Password.o start the database server: 1  In the Services window, right-click the Java DB node and choose Start Server. 2  Note the following output in the Output window, indicating that the server has started: 3  Right-click the Java DB node and choose Create Database to open the Create Java DB Database dialog. 4  Type.
+</BODY>
+</HTML>
+</DOC>
+

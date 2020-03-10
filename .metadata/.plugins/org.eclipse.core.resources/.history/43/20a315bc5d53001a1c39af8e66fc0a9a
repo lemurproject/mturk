@@ -1,0 +1,18 @@
+package org.lemurproject.cw;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component("searchService")
+public class SearchService {
+	
+	@Autowired
+	private GlobalProperties properties;
+	
+	public SearchService() {
+
+	}
+
+
+
+}
