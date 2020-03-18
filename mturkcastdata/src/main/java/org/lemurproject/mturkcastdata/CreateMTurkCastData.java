@@ -10,7 +10,13 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
@@ -53,18 +59,27 @@ public class CreateMTurkCastData {
 
 		// BufferedWriter csvWriter = new BufferedWriter(new
 		// FileWriter("mturk_cast.csv"), "UTF8");
-		Writer csvWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream("mturk_cast_500.csv"), "UTF8"));
-		csvWriter.write("queryNum,subQueryNum,query,text,document,score\n");
 
 		QueryParser qp = new QueryParser("externalId", new StandardAnalyzer());
 
-		int num = 0;
+		int qrelNum = 0;
+		String prevQueryNum = "";
+		List<CASTDocument> docs = new ArrayList<CASTDocument>();
+		List<CASTHIT> allHITs = new ArrayList<CASTHIT>();
+		Qrel lastQrel = null;
 		for (Qrel qrel : qrels) {
-			num++;
-			if (num % 4 == 0) {
+			qrelNum++;
+			if (qrelNum % 4 == 0) {
+				String currentQueryNum = qrel.getQueryNum();
+				if (!currentQueryNum.contentEquals(prevQueryNum)) {
+					if (docs.size() > 0) {
+						allHITs.addAll(createRandomHITs(docs, lastQrel, queries));
+						System.out.println("Created HITs for: " + lastQrel.getQueryNum());
+						// allHITs.addAll(createHITs(docs, lastQrel, queries));
+					}
+					docs = new ArrayList<CASTDocument>();
+				}
 				String docId = qrel.getDocId();
-				StringJoiner docLine = new StringJoiner(",");
 				Document doc = null;
 				if (docId.startsWith("MARCO")) {
 					String docNum = docId.substring(docId.indexOf("_") + 1);
@@ -79,7 +94,6 @@ public class CreateMTurkCastData {
 					for (ScoreDoc scoreDoc : scoreDocs) {
 						int docid = scoreDoc.doc;
 						doc = marcoSearcher.doc(docid);
-						// System.out.println(doc.get("body"));
 					}
 				} else {
 					String docNum = docId.substring(docId.indexOf("_") + 1);
@@ -94,33 +108,291 @@ public class CreateMTurkCastData {
 					for (ScoreDoc scoreDoc : scoreDocs) {
 						int docid = scoreDoc.doc;
 						doc = carSearcher.doc(docid);
-						// System.out.println(doc.get("body"));
 					}
 				}
-				docLine.add(qrel.getQueryNum());
-				docLine.add(qrel.getSubQueryNum());
-				String queryText = getQueryText(queries, qrel.queryNum);
-				docLine.add(queryText);
 				String docText = doc.get("body");
 				docText = docText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?! ]", "");
 				docText = String.join("", "\" ", docText, "\"");
-				docLine.add(docText);
-				docLine.add(docId);
-				docLine.add(qrel.getScore());
-				csvWriter.write(docLine.toString());
-				csvWriter.write("\n");
-			}
-			if (num >= 2000) {
-				break;
+				CASTDocument castDoc = new CASTDocument();
+				castDoc.setDocId(docId);
+				castDoc.setDocText(docText);
+				castDoc.setScore(Integer.valueOf(qrel.getScore()));
+				docs.add(castDoc);
+				prevQueryNum = currentQueryNum;
+				lastQrel = qrel;
 			}
 		}
-		csvWriter.close();
+		allHITs.addAll(createHITs(docs, lastQrel, queries));
+		writeAllCSV(allHITs);
+		// writeGroupCSV(allHITs);
 	}
 
-	private String getQueryText(List<CASTQuery> queries, String queryNum) {
-		String[] queryNums = queryNum.split("_");
-		String firstQueryNum = queryNums[0];
-		int secondQueryNum = Integer.valueOf(queryNums[1]).intValue();
+	private void writeGroupCSV(List<CASTHIT> hits) throws IOException {
+		Writer csv3Writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_30s.csv"), "UTF8"));
+		csv3Writer.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		Writer csv4Writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_40s.csv"), "UTF8"));
+		csv4Writer.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		Writer csv5Writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_50s.csv"), "UTF8"));
+		csv5Writer.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		Writer csv6Writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_60s.csv"), "UTF8"));
+		csv6Writer.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		Writer csv7Writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_70s.csv"), "UTF8"));
+		csv7Writer.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		for (CASTHIT hit : hits) {
+			StringJoiner hitLineBuffer = new StringJoiner(",");
+			hitLineBuffer.add(hit.getQueryNum());
+			hitLineBuffer.add(String.valueOf(hit.getSubQueryNum()));
+			hitLineBuffer.add(hit.getQueryText());
+			for (CASTDocument castDoc : hit.getDocs()) {
+				hitLineBuffer.add(castDoc.getDocText());
+				hitLineBuffer.add(castDoc.getDocId());
+				hitLineBuffer.add(String.valueOf(castDoc.getScore()));
+			}
+			if (hit.getTopicQueryNum() < 40) {
+				csv3Writer.write(String.join("", hitLineBuffer.toString(), "\n"));
+			} else if (hit.getTopicQueryNum() < 50) {
+				csv4Writer.write(String.join("", hitLineBuffer.toString(), "\n"));
+			} else if (hit.getTopicQueryNum() < 60) {
+				csv5Writer.write(String.join("", hitLineBuffer.toString(), "\n"));
+			} else if (hit.getTopicQueryNum() < 70) {
+				csv6Writer.write(String.join("", hitLineBuffer.toString(), "\n"));
+			} else if (hit.getTopicQueryNum() < 80) {
+				csv7Writer.write(String.join("", hitLineBuffer.toString(), "\n"));
+			}
+		}
+		csv3Writer.close();
+		csv4Writer.close();
+		csv5Writer.close();
+		csv6Writer.close();
+		csv7Writer.close();
+	}
+
+	private void writeAllCSV(List<CASTHIT> hits) throws IOException {
+		Writer csvAllWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("mturk_cast_all.csv"), "UTF8"));
+		csvAllWriter.write(
+				"queryNum,subQueryNum,query,text1,document1,score1,text2,document2,score2,text3,document3,score3,text4,document4,score4,text5,document5,score5\n");
+		for (CASTHIT hit : hits) {
+			StringJoiner hitLineBuffer = new StringJoiner(",");
+			hitLineBuffer.add(hit.getQueryNum());
+			hitLineBuffer.add(String.valueOf(hit.getSubQueryNum()));
+			hitLineBuffer.add(hit.getQueryText());
+			for (CASTDocument castDoc : hit.getDocs()) {
+				if (castDoc != null) {
+					hitLineBuffer.add(castDoc.getDocText());
+					hitLineBuffer.add(castDoc.getDocId());
+					hitLineBuffer.add(String.valueOf(castDoc.getScore()));
+				} else {
+					System.out.println("Doc is null for HIT: " + hitLineBuffer.toString());
+				}
+			}
+			// System.out.println(String.join("", hitLineBuffer.toString(), "\n"));
+			csvAllWriter.write(String.join("", hitLineBuffer.toString(), "\n"));
+		}
+
+		csvAllWriter.close();
+	}
+
+	private List<CASTHIT> createRandomHITs(List<CASTDocument> docs, Qrel qrel, List<CASTQuery> queries) {
+		// Get number of random documents needed
+		int numDocs = docs.size();
+		double fivePercent = docs.size() * 0.05;
+		long numRepeatDocs = Math.round(fivePercent);
+		if ((docs.size() + numRepeatDocs) % 5 != 0) {
+			numRepeatDocs = numRepeatDocs + (5 - ((docs.size() + numRepeatDocs) % 5));
+		}
+
+		// Create map of scores to list of docs
+		Map<Integer, List<CASTDocument>> docsPerScoreMap = new HashMap<Integer, List<CASTDocument>>();
+		for (CASTDocument doc : docs) {
+			docsPerScoreMap.putIfAbsent(doc.getScore(), new ArrayList<CASTDocument>());
+			docsPerScoreMap.get(doc.getScore()).add(doc);
+		}
+
+		// Create queue of types of repeat docs
+		List<Integer> randomDocScores = new ArrayList<Integer>();
+		List<Integer> scoreValues = new ArrayList<Integer>(docsPerScoreMap.keySet());
+		Collections.reverse(scoreValues);
+		while (randomDocScores.size() < numRepeatDocs) {
+			for (Integer scoreValue : scoreValues) {
+				randomDocScores.add(scoreValue);
+				if (randomDocScores.size() >= numRepeatDocs) {
+					break;
+				}
+			}
+		}
+
+		List<CASTHIT> hits = new ArrayList<CASTHIT>();
+
+		// Calculate number of HITs
+		long totalDocs = docs.size() + numRepeatDocs;
+		long numHITs = totalDocs / 5;
+
+		Collections.shuffle(randomDocScores);
+		Queue<Integer> randomScoreQueue = new LinkedList<Integer>(randomDocScores);
+
+		// Generate random doc placements
+		Queue<Long> randomDocPositions = new LinkedList<Long>();
+		long startDoc = totalDocs / 4;
+		if (startDoc < 5) {
+			startDoc = 5l;
+		}
+		long randomDocDist = Double.valueOf(Math.floor((totalDocs - startDoc) / (double) numRepeatDocs)).longValue();
+		randomDocPositions.add(startDoc);
+		long prevDoc = startDoc;
+		for (int i = 1; i <= numRepeatDocs; i++) {
+			long nextPos = prevDoc + randomDocDist;
+			randomDocPositions.add(nextPos);
+			prevDoc = nextPos;
+		}
+
+		System.out.println("Generating HITs for: " + qrel.getQueryNum());
+		// Iterate through HITs
+		int docNum = 0;
+		Queue<CASTDocument> originalDocQueue = new LinkedList<CASTDocument>(docs);
+		Long currentRandomDocPos = Long.valueOf(-1);
+		if (randomDocPositions != null && randomDocPositions.size() > 0) {
+			currentRandomDocPos = randomDocPositions.poll();
+		}
+		List<CASTDocument> prevSeenDocs = new ArrayList<CASTDocument>();
+		for (int i = 0; i < numHITs; i++) {
+			System.out.println("Creating HIT number: " + i);
+			CASTHIT hit = new CASTHIT();
+			hit.setQueryNum(qrel.getQueryNum());
+			hit.setTopicQueryNum(Integer.valueOf(qrel.getGroupQueryNum()));
+			hit.setSubQueryNum(Integer.valueOf(qrel.getSubQueryNum()));
+			hit.setQueryText(getQueryText(queries, qrel));
+
+			List<CASTDocument> hitDocs = new ArrayList<CASTDocument>();
+			for (int j = 0; j < 5; j++) {
+				// System.out.println("Loading document number: " + j);
+				if (currentRandomDocPos != null && currentRandomDocPos.intValue() == docNum) {
+					int randomScoreValue = 4;
+					if (randomScoreQueue != null && randomScoreQueue.size() > 0) {
+						randomScoreValue = randomScoreQueue.poll();
+					}
+					Iterator<CASTDocument> docIter = prevSeenDocs.iterator();
+					int numLoopTimes = 0;
+					int maxLoopTimes = scoreValues.size();
+					if (randomScoreQueue.size() > scoreValues.size()) {
+						maxLoopTimes = randomScoreQueue.size() * 100;
+					}
+					maxLoopTimes *= prevSeenDocs.size();
+					while (currentRandomDocPos.intValue() == docNum && docIter.hasNext()
+							&& numLoopTimes < maxLoopTimes) {
+						// System.out.println("In random doc loop");
+						CASTDocument tempDoc = docIter.next();
+						if (tempDoc.getScore() == randomScoreValue) {
+							hitDocs.add(tempDoc);
+							prevSeenDocs.remove(tempDoc);
+							docNum++;
+						} else if (!docIter.hasNext()) {
+							randomScoreQueue.add(randomScoreValue);
+							randomScoreValue = randomScoreQueue.poll();
+							docIter = prevSeenDocs.iterator();
+						}
+						numLoopTimes++;
+					}
+					// If no other document works
+					if (currentRandomDocPos.intValue() == docNum) {
+						System.out.println("Loading default random doc");
+						if (prevSeenDocs.size() > 0) {
+							if (prevSeenDocs.get(0) == null) {
+								System.out.println("Doc is null");
+							}
+							hitDocs.add(prevSeenDocs.get(0));
+							prevSeenDocs.remove(0);
+							docNum++;
+						} else {
+							System.out.println("No previously seen docs!");
+						}
+					}
+					currentRandomDocPos = randomDocPositions.poll();
+				} else {
+					CASTDocument originalDoc = originalDocQueue.poll();
+					if (originalDoc == null) {
+						System.out.println("Original doc is null");
+					}
+					hitDocs.add(originalDoc);
+					docNum++;
+				}
+			}
+			hit.setDocs(hitDocs);
+			hits.add(hit);
+			prevSeenDocs.addAll(hitDocs);
+		}
+
+		return hits;
+	}
+
+	private List<CASTHIT> createHITs(List<CASTDocument> docs, Qrel qrel, List<CASTQuery> queries) {
+		// Get number of random documents needed
+		double fivePercent = docs.size() * 0.05;
+		long numRepeatDocs = Math.round(fivePercent);
+		if ((docs.size() + numRepeatDocs) % 5 != 0) {
+			numRepeatDocs = numRepeatDocs + (5 - ((docs.size() + numRepeatDocs) % 5));
+		}
+
+		// Create map of scores to list of docs
+		Map<Integer, List<CASTDocument>> docsPerScoreMap = new HashMap<Integer, List<CASTDocument>>();
+		for (CASTDocument doc : docs) {
+			docsPerScoreMap.putIfAbsent(doc.getScore(), new ArrayList<CASTDocument>());
+			docsPerScoreMap.get(doc.getScore()).add(doc);
+		}
+
+		// Find repeat docs
+		List<CASTDocument> repeatDocs = new ArrayList<CASTDocument>();
+		List<Integer> scoreValues = new ArrayList<Integer>(docsPerScoreMap.keySet());
+		Collections.reverse(scoreValues);
+		int indexNum = 0;
+		while (repeatDocs.size() < numRepeatDocs) {
+			for (Integer scoreValue : scoreValues) {
+				List<CASTDocument> docsForScore = docsPerScoreMap.get(scoreValue);
+				if (docsForScore.size() > indexNum) {
+					repeatDocs.add(docsForScore.get(indexNum));
+					if (repeatDocs.size() >= numRepeatDocs) {
+						break;
+					}
+				}
+			}
+			indexNum++;
+		}
+		docs.addAll(repeatDocs);
+
+		List<CASTHIT> hits = new ArrayList<CASTHIT>();
+		int docNum = 0;
+		for (int i = 0; i < (docs.size() / 5); i++) {
+			CASTHIT hit = new CASTHIT();
+			hit.setQueryNum(qrel.getQueryNum());
+			hit.setTopicQueryNum(Integer.valueOf(qrel.getGroupQueryNum()));
+			hit.setSubQueryNum(Integer.valueOf(qrel.getSubQueryNum()));
+			hit.setQueryText(getQueryText(queries, qrel));
+
+			List<CASTDocument> hitDocs = new ArrayList<CASTDocument>();
+			for (int j = docNum; j < (docNum + 5); j++) {
+				hitDocs.add(docs.get(j));
+			}
+			docNum += 5;
+			hit.setDocs(hitDocs);
+			hits.add(hit);
+		}
+
+		return hits;
+	}
+
+	private String getQueryText(List<CASTQuery> queries, Qrel qrel) {
+		String firstQueryNum = qrel.getGroupQueryNum();
+		int secondQueryNum = Integer.valueOf(qrel.getSubQueryNum()).intValue();
 
 		StringJoiner queryBuffer = new StringJoiner("<br/>");
 
@@ -131,8 +403,7 @@ public class CreateMTurkCastData {
 					queryBuffer.add(query.getQueryText());
 				} else if (Integer.valueOf(query.getQueryNum().substring(query.getQueryNum().indexOf("_") + 1))
 						.intValue() == secondQueryNum) {
-					String highlightedQuery = String.join("", "<span>",
-							query.getQueryText(), "</span>");
+					String highlightedQuery = String.join("", "<span>", query.getQueryText(), "</span>");
 					queryBuffer.add(highlightedQuery);
 				}
 			}
@@ -188,6 +459,7 @@ public class CreateMTurkCastData {
 				Qrel qrel = new Qrel();
 				qrel.setDocId(lineParts[2]);
 				qrel.setQueryNum(lineParts[0]);
+				qrel.setGroupQueryNum(lineParts[0].substring(0, lineParts[0].indexOf("_")));
 				qrel.setSubQueryNum(lineParts[0].substring(lineParts[0].indexOf("_") + 1));
 				qrel.setScore(lineParts[3]);
 
@@ -221,6 +493,7 @@ public class CreateMTurkCastData {
 
 	public class Qrel {
 		private String queryNum;
+		private String groupQueryNum;
 		private String subQueryNum;
 		private String docId;
 		private String score;
@@ -260,6 +533,14 @@ public class CreateMTurkCastData {
 
 		public void setSubQueryNum(String subQueryNum) {
 			this.subQueryNum = subQueryNum;
+		}
+
+		public String getGroupQueryNum() {
+			return groupQueryNum;
+		}
+
+		public void setGroupQueryNum(String groupQueryNum) {
+			this.groupQueryNum = groupQueryNum;
 		}
 
 	}

@@ -1,0 +1,12 @@
+com\example\springboot\TaskInformation.class
+com\example\springboot\HelloController.class
+com\example\springboot\DocumentListController.class
+com\example\springboot\HelloService$Qrel.class
+com\example\springboot\QueryController.class
+com\example\springboot\Application.class
+com\example\springboot\DocumentController.class
+com\example\springboot\HelloService.class
+com\example\springboot\TestController.class
+com\example\springboot\GlobalProperties.class
+com\example\springboot\DocumentRelevanceObject.class
+com\example\springboot\AppConfig.class

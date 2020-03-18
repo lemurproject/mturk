@@ -1,5 +1,0 @@
-queries=query.txt
-qrels=trecQueries.json
-
-car.index=C:\\dev\\Indexes_Lucene_1.0\\cast_car
-marco.index=C:\\dev\\Indexes_Lucene_1.0\\cast
