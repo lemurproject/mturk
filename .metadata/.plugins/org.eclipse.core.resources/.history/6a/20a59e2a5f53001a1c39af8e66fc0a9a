@@ -1,8 +1,0 @@
-package org.lemurproject.cw;
-
-public class SearchResult {
-
-	private String docId;
-	private Double score;
-	
-}
