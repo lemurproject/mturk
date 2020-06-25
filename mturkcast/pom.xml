@@ -9,10 +9,10 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>spring-boot</artifactId>
+	<groupId>org.lemurproject</groupId>
+	<artifactId>mturkcast</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot</name>
+	<name>mturkcast</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>war</packaging>
 
@@ -30,6 +30,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.11.749</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- JSTL for JSP -->
@@ -75,7 +81,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.example.springboot.Application</mainClass>
+					<mainClass>org.lemurproject.mturkcast.MTurkCAST</mainClass>
 				</configuration>
 			</plugin>
 

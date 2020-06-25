@@ -1,4 +1,5 @@
 package org.lemurproject.mturk;
+
 /*
  * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
@@ -37,8 +38,9 @@ import com.amazonaws.services.mturk.model.ListAssignmentsForHITResult;
 
 public class ApproveAssignmentsSample {
 
-	// TODO Change this to your HIT ID - see CreateHITSample.java for generating a HIT
-	private static final String HIT_ID_TO_APPROVE = "3BAKUKE49HC8TEXTQ40ZCXRKFFOR10";
+	// TODO Change this to your HIT ID - see CreateHITSample.java for generating a
+	// HIT
+	private static final String HIT_ID_TO_APPROVE = "311HQEI8RSGV6RYMP1BLZAKWSEV7ZN";
 
 	private static final String SANDBOX_ENDPOINT = "mturk-requester-sandbox.us-east-1.amazonaws.com";
 	private static final String SIGNING_REGION = "us-east-1";
@@ -54,10 +56,12 @@ public class ApproveAssignmentsSample {
 		this.client = client;
 	}
 
-	/* 
-	Use the Amazon Mechanical Turk Sandbox to publish test Human Intelligence Tasks (HITs) without paying any money.
-	Make sure to sign up for a Sanbox account at https://requestersandbox.mturk.com/ with the same credentials as your main MTurk account.
-	*/
+	/*
+	 * Use the Amazon Mechanical Turk Sandbox to publish test Human Intelligence
+	 * Tasks (HITs) without paying any money. Make sure to sign up for a Sanbox
+	 * account at https://requestersandbox.mturk.com/ with the same credentials as
+	 * your main MTurk account.
+	 */
 	private static AmazonMTurk getSandboxClient() {
 		AmazonMTurkClientBuilder builder = AmazonMTurkClientBuilder.standard();
 		builder.setEndpointConfiguration(new EndpointConfiguration(SANDBOX_ENDPOINT, SIGNING_REGION));

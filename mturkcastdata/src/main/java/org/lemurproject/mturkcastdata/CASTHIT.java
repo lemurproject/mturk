@@ -8,6 +8,8 @@ public class CASTHIT {
 	private int topicQueryNum;
 	private int subQueryNum;
 	private String queryText;
+	private String hitCount;
+	private boolean lastHITinQuestion;
 	private List<CASTDocument> docs;
 
 	public String getQueryNum() {
@@ -48,6 +50,22 @@ public class CASTHIT {
 
 	public void setTopicQueryNum(int topicQueryNum) {
 		this.topicQueryNum = topicQueryNum;
+	}
+
+	public String getHitCount() {
+		return hitCount;
+	}
+
+	public void setHitCount(String hitCount) {
+		this.hitCount = hitCount;
+	}
+
+	public boolean isLastHITinQuestion() {
+		return lastHITinQuestion;
+	}
+
+	public void setLastHITinQuestion(boolean lastHITinQuestion) {
+		this.lastHITinQuestion = lastHITinQuestion;
 	}
 
 }

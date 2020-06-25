@@ -1,21 +1,94 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Query Relevance</title>
-<link href="/css/main.css" rel="stylesheet">
-</head>
-<body>
-	<h2 class="hello-title">Search Results</h2>
-	<script src="/js/main.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+	integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+	crossorigin="anonymous"></link>
+<style type="text/css" media="screen">
+.formstyle {
+	margin-top: 10px;
+	margin-bottom: 20px;
+	margin-left: 50px;
+	margin-right: 20px;
+}
 
-<form action="/results" method="get">
-	<c:forEach items="${fulldocs}" var="document">
-				<div><a href="./document?docid=${document.docId}">${document.title}</a></div>
-				<div>${document.docId}&nbsp;${document.url}</div>
-				<div>${document.snippet}</div><br/>
-	</c:forEach>
-</form>
+.tablestyle {
+	width: 100%;
+}
+
+.cellstyle {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.titlestyle {
+	font-size: 150%;
+}
+
+.urlstyle {
+	font-size: 90%;
+	color: gray;
+}
+
+.instructionstyle {
+	margin-top: 10px; font-size : 150%;
+	color: blue;
+	font-size: 150%;
+}
+
+.buttonstyle {
+	
+}
+</style>
+</head>
+<body class="formstyle">
+	<form:form action="https://workersandbox.mturk.com/mturk/externalSubmit" method="post"
+		modelAttribute="searchResult">
+		<form:input path="assignmentId" type="hidden" value="${searchResult.assignmentId}"/>
+		<form:input path="query" type="hidden" value="${searchResult.query}"/>
+		<form:input path="description" type="hidden" value="${searchResult.description}"/>
+		<div align="left">
+			<label>Searched for: </label>&nbsp;&nbsp;
+			<form:input path="query" size="100" disabled="true"/>
+		</div>
+		<div class="instructionstyle">Select the documents that are
+			relevant to your query.</div>
+		<hr />
+		<table class="tablestyle">
+			<col width="10">
+			<c:forEach items="${searchResult.documents}" var="document" varStatus="tagStatus">
+				<form:input path="documents[${tagStatus.index}].docId" type="hidden" value="${document.docId}"/>
+				<tr>
+					<td></td>
+					<td class="cellstyle"><div class="urlstyle">${document.url}</div></td>
+				</tr>
+				<tr>
+					<td class="cellstyle"><form:checkbox path="documents[${tagStatus.index}].selected"
+						id="${document.docId}" name="${document.docId}" value="selected"/></td>
+					<td  class="cellstyle">
+						<div>
+						<a class="titlestyle" target="_blank" href="${document.url}">${document.title}</a>
+							<!--<a class="titlestyle" href="./document?docid=${document.docId}">${document.title}</a>
+							 <a class="titlestyle" href="./documentFrame?docurl=${document.url}">${document.title}</a> -->
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td  class="cellstyle"><div>${document.snippet}</div> <br /></td>
+				</tr>
+			</c:forEach>
+		</table>
+		<div align="right">
+			<input type="submit" name="submitButton" id="submitButton"
+				class="btn btn-primary" value="Submit" />
+		</div>
+	</form:form>
 </body>
 </html>

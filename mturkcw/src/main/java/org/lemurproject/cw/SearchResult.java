@@ -1,44 +1,44 @@
 package org.lemurproject.cw;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
 
-@Component
 public class SearchResult {
 
-	private String docId;
-	private String title;
-	private String url;
-	private Float score;
-	private String snippet;
-	public Float getScore() {
-		return score;
+	private String query;
+	private String description;
+	private List<DocumentResult> documents;
+	private String assignmentId;
+
+	public String getQuery() {
+		return query;
 	}
-	public void setScore(Float score) {
-		this.score = score;
+
+	public void setQuery(String query) {
+		this.query = query;
 	}
-	public String getDocId() {
-		return docId;
+
+	public List<DocumentResult> getDocuments() {
+		return documents;
 	}
-	public void setDocId(String docId) {
-		this.docId = docId;
+
+	public void setDocuments(List<DocumentResult> documents) {
+		this.documents = documents;
 	}
-	public String getSnippet() {
-		return snippet;
+
+	public String getAssignmentId() {
+		return assignmentId;
 	}
-	public void setSnippet(String snippet) {
-		this.snippet = snippet;
+
+	public void setAssignmentId(String assignmentId) {
+		this.assignmentId = assignmentId;
 	}
-	public String getTitle() {
-		return title;
+
+	public String getDescription() {
+		return description;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
+
 }

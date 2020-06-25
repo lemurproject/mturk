@@ -1,4 +1,5 @@
 package org.lemurproject.mturk;
+
 /*
  * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
@@ -12,6 +13,7 @@ package org.lemurproject.mturk;
  * and limitations under the License.
  */
 import java.io.IOException;
+
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.mturk.AmazonMTurk;
 import com.amazonaws.services.mturk.AmazonMTurkClientBuilder;
@@ -37,10 +39,12 @@ public class GetAccountBalanceSample {
 	private static final String SIGNING_REGION = "us-east-1";
 
 	public static void main(final String[] argv) throws IOException {
-		/* 
-		Use the Amazon Mechanical Turk Sandbox to publish test Human Intelligence Tasks (HITs) without paying any money.
-		Sign up for a Sandbox account at https://requestersandbox.mturk.com/ with the same credentials as your main MTurk account.
-		*/
+		/*
+		 * Use the Amazon Mechanical Turk Sandbox to publish test Human Intelligence
+		 * Tasks (HITs) without paying any money. Sign up for a Sandbox account at
+		 * https://requestersandbox.mturk.com/ with the same credentials as your main
+		 * MTurk account.
+		 */
 		final GetAccountBalanceSample sandboxApp = new GetAccountBalanceSample(getSandboxClient());
 		final String sandboxBalance = sandboxApp.getAccountBalance();
 
@@ -51,8 +55,6 @@ public class GetAccountBalanceSample {
 		final GetAccountBalanceSample productionApp = new GetAccountBalanceSample(getProductionClient());
 		final String productionBalance = productionApp.getAccountBalance();
 		System.out.println("PRODUCTION - Your account balance is " + productionBalance);
-		
-		HIT hit = sandboxApp.createHIT();
 	}
 
 	private final AmazonMTurk client;
@@ -78,7 +80,7 @@ public class GetAccountBalanceSample {
 		GetAccountBalanceResult result = client.getAccountBalance(getBalanceRequest);
 		return result.getAvailableBalance();
 	}
-	
+
 	private HIT createHIT() {
 		CreateHITRequest createHITRequest = new CreateHITRequest();
 		createHITRequest.setTitle("Sample HIT java request");

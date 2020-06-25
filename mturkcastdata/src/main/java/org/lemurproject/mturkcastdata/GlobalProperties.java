@@ -10,15 +10,21 @@ public class GlobalProperties {
 
 	@Value("${queries}")
 	private String queries;
-	
+
 	@Value("${qrels}")
 	private String qrels;
-	
+
+	@Value("${hit.csv}")
+	private String hitCsv;
+
 	@Value("${car.index}")
 	private String carIndex;
-	
+
 	@Value("${marco.index}")
 	private String marcoIndex;
+
+	@Value("${topic.nums}")
+	private String topicNums;
 
 	public String getQueries() {
 		return queries;
@@ -51,5 +57,21 @@ public class GlobalProperties {
 	public void setMarcoIndex(String marcoIndex) {
 		this.marcoIndex = marcoIndex;
 	}
-	
+
+	public String getHitCsv() {
+		return hitCsv;
+	}
+
+	public void setHitCsv(String hitCsv) {
+		this.hitCsv = hitCsv;
+	}
+
+	public String getTopicNums() {
+		return topicNums;
+	}
+
+	public void setTopicNums(String topicNums) {
+		this.topicNums = topicNums;
+	}
+
 }
