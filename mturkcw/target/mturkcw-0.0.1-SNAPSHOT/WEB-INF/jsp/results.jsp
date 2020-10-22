@@ -81,7 +81,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td  class="cellstyle"><div>${document.snippet}</div> <br /></td>
+					<td  class="cellstyle"><div>${document.highlight}</div> <br /></td>
 				</tr>
 			</c:forEach>
 		</table>

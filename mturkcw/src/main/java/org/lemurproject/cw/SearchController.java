@@ -72,6 +72,18 @@ public class SearchController {
 		return "results";
 	}
 
+	@PostMapping({ "/searchResultsBERT" })
+	public String getSearchResultsBERT(@RequestParam(name = "queryString") String query,
+			@RequestParam(name = "queryDescription") String description,
+			@RequestParam(name = "assignmentId") String assignmentId, HttpServletRequest request, Model model)
+			throws SolrServerException, IOException {
+		SearchResult searchResult = searchService.bertSearch(query);
+		searchResult.setDescription(description);
+		searchResult.setAssignmentId(assignmentId);
+		model.addAttribute("searchResult", searchResult);
+		return "results";
+	}
+
 	@GetMapping({ "/document" })
 	public String document(@RequestParam String docid, HttpServletRequest request, Model model)
 			throws SolrServerException, IOException {

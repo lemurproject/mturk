@@ -147,6 +147,7 @@ public class GetUnsubmittedHITs {
 				i++;
 			}
 		}
+		System.out.println("Number HITS unsumbitted: " + allHITs.size());
 		missedWriter.close();
 	}
 

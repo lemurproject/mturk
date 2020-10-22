@@ -9,7 +9,7 @@ public class DocumentResult {
 	private String title;
 	private String url;
 	private Float score;
-	private String snippet;
+	private String highlight;
 	private Boolean selected;
 
 	public Float getScore() {
@@ -26,14 +26,6 @@ public class DocumentResult {
 
 	public void setDocId(String docId) {
 		this.docId = docId;
-	}
-
-	public String getSnippet() {
-		return snippet;
-	}
-
-	public void setSnippet(String snippet) {
-		this.snippet = snippet;
 	}
 
 	public String getTitle() {
@@ -58,6 +50,14 @@ public class DocumentResult {
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+
+	public String getHighlight() {
+		return highlight;
+	}
+
+	public void setHighlight(String highlight) {
+		this.highlight = highlight;
 	}
 
 }

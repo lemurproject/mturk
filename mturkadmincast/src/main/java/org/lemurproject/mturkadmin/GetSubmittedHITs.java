@@ -175,7 +175,7 @@ public class GetSubmittedHITs {
 					judgedDoc5.setWorkerScore(answer[0].getDoc5WorkerScore());
 					judgedDocuments.add(judgedDoc5);
 				}
-				Thread.sleep(2000);
+				// Thread.sleep(2000);
 			}
 		}
 		scanner.close();

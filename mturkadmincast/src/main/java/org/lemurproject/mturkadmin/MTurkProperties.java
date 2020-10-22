@@ -17,6 +17,9 @@ public class MTurkProperties {
 	@Value("${addtopics.url}")
 	private String addTopicsUrl;
 
+	@Value("${addtopicname.url}")
+	private String addTopicNameUrl;
+
 	@Value("${question.filename}")
 	private String questionFilename;
 
@@ -26,11 +29,11 @@ public class MTurkProperties {
 	@Value("${hit2topic.filename}")
 	private String hit2topicFilename;
 
-	@Value("${topic2url.filename}")
-	private String topic2urlFilename;
-
 	@Value("${qualification.type}")
 	private String qualificationType;
+
+	@Value("${topic.name}")
+	private String topicName;
 
 	@Value("${hit.lifetime}")
 	private String hitLifetime;
@@ -63,14 +66,6 @@ public class MTurkProperties {
 
 	public void setHit2topicFilename(String hit2topicFilename) {
 		this.hit2topicFilename = hit2topicFilename;
-	}
-
-	public String getTopic2urlFilename() {
-		return topic2urlFilename;
-	}
-
-	public void setTopic2urlFilename(String topic2urlFilename) {
-		this.topic2urlFilename = topic2urlFilename;
 	}
 
 	public String getQualificationType() {
@@ -127,6 +122,22 @@ public class MTurkProperties {
 
 	public void setHitLifetime(String hitLifetime) {
 		this.hitLifetime = hitLifetime;
+	}
+
+	public String getTopicName() {
+		return topicName;
+	}
+
+	public void setTopicName(String topicName) {
+		this.topicName = topicName;
+	}
+
+	public String getAddTopicNameUrl() {
+		return addTopicNameUrl;
+	}
+
+	public void setAddTopicNameUrl(String addTopicNameUrl) {
+		this.addTopicNameUrl = addTopicNameUrl;
 	}
 
 }

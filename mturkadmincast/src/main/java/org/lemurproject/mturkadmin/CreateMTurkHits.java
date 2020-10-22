@@ -5,9 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,6 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +42,8 @@ public class CreateMTurkHits {
 	@Autowired
 	private MTurkClientHelper clientHelper;
 
+	private final CloseableHttpClient httpClient = HttpClients.createDefault();
+
 	public void createHits() throws IOException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
@@ -47,8 +53,6 @@ public class CreateMTurkHits {
 		Iterator<HITObject> hitIterator = csvToBean.iterator();
 		// hitIterator.next();
 
-		Writer topicUrlWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(properties.getTopic2urlFilename()), "UTF8"));
 		Writer hitDataWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(properties.getHit2topicFilename()), "UTF8"));
 		hitDataWriter.write(String.join("", "hitId", ",", "dataRowId", "\n"));
@@ -62,10 +66,8 @@ public class CreateMTurkHits {
 		workerRequirement.setActionsGuarded(HITAccessActions.DiscoverPreviewAndAccept);
 		qualifications.add(workerRequirement);
 
-		Map<String, String> topicToUrlMap = new HashMap<String, String>();
-		int numHits = 0;
+		String topic = "";
 		while (hitIterator.hasNext()) {
-			numHits++;
 			HITObject hitObject = hitIterator.next();
 
 			CreateHITRequest request = new CreateHITRequest();
@@ -78,14 +80,16 @@ public class CreateMTurkHits {
 			// long lifetime = 60 * 60L * 2;
 			request.setLifetimeInSeconds(lifetime);
 			request.setAssignmentDurationInSeconds(900l);
+			// request.setAssignmentDurationInSeconds(60l);
 			// Reward is a USD dollar amount - USD$0.20 in the example below
 			request.setReward("0.45");
-			String topic = hitObject.getQueryNum().substring(0, hitObject.getQueryNum().indexOf("_"));
-			request.setTitle("How relevant is the document to the question/conversation?  (Topic Id: " + topic + ")");
+			topic = hitObject.getQueryNum().substring(0, hitObject.getQueryNum().indexOf("_"));
+			request.setTitle("How relevant is the document to the question/conversation?  (Topic: "
+					+ properties.getTopicName() + ")");
 			request.setKeywords("document, relevance");
 			request.setDescription(
-					"Given the conversation, how relevant is the given document to the last topic of the conversation? (Topic Id: "
-							+ topic + ")");
+					"Given the conversation, how relevant is the given document to the last topic of the conversation? (Topic: "
+							+ properties.getTopicName() + ")");
 			request.setQualificationRequirements(qualifications);
 
 			CreateHITResult result = client.createHIT(request);
@@ -98,29 +102,51 @@ public class CreateMTurkHits {
 						result.getHIT().getHITTypeId());
 			}
 			System.out.println(String.join(": ", topic, url));
-			topicToUrlMap.put(topic, url);
 			hitDataWriter.write(String.join("", result.getHIT().getHITId(), ",", topic, "\n"));
+
+//			Map<String, String> parameters = new HashMap<>();
+//			parameters.put("topic", topic);
+//			parameters.put("hitId", result.getHIT().getHITId());
+//			parameters.put("hitMapFile", properties.getHit2topicFilename());
+//			String parameterString = getParamsString(parameters);
+
+//			HttpGet addHitRequest = new HttpGet(String.join("?", properties.getAddTopicsUrl(), parameterString));
+//			try (CloseableHttpResponse response = httpClient.execute(addHitRequest)) {
+//				System.out.println("Successfully added HIT: " + result.getHIT().getHITId());
+//			} catch (Exception e) {
+//				System.out.println("Failed adding HIT: " + result.getHIT().getHITId());
+//			}
+
 		}
 
-		topicToUrlMap.forEach((topic, url) -> {
-			try {
-				topicUrlWriter.write(String.join("", topic, ",", url, "\n"));
-			} catch (IOException e) {
-				System.out.println("Could not write to topic url csv");
-			}
-		});
-		topicUrlWriter.close();
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put("topic", topic);
+		parameters.put("topicName", properties.getTopicName());
+		String parameterString = getParamsString(parameters);
+		HttpGet addTopicRequest = new HttpGet(String.join("?", properties.getAddTopicNameUrl(), parameterString));
+		try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
+			System.out.println("Successfully added topic: " + topic + " - " + properties.getTopicName());
+		} catch (Exception e) {
+			System.out.println("Failed adding HIT: " + topic + " - " + properties.getTopicName());
+		}
+
 		hitDataWriter.close();
+		httpClient.close();
 
-		String addTopicsUrl = properties.getAddTopicsUrl();
-		String urlParameters = String.join("", "hitMapFile=", properties.getHit2topicFilename(), "&hitCsvFile=",
-				properties.getDataFilename());
-		System.out.println(String.join("?", addTopicsUrl, urlParameters));
-		URL url = new URL(String.join("?", addTopicsUrl, urlParameters));
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("GET");
-		connection.connect();
+	}
 
+	public static String getParamsString(Map<String, String> params) throws UnsupportedEncodingException {
+		StringBuilder result = new StringBuilder();
+
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+			result.append("=");
+			result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+			result.append("&");
+		}
+
+		String resultString = result.toString();
+		return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
 	}
 
 }

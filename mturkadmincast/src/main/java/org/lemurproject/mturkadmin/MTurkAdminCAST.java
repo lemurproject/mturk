@@ -15,6 +15,12 @@ public class MTurkAdminCAST implements CommandLineRunner {
 	private CreateMTurkHits mturk;
 
 	@Autowired
+	private GetApprovedHITs getApprovedHITs;
+
+	@Autowired
+	private GetAllSubmittedHITs getAllSubmittedHITs;
+
+	@Autowired
 	private GetSubmittedHITs getSubmittedHITs;
 
 	@Autowired
@@ -25,6 +31,12 @@ public class MTurkAdminCAST implements CommandLineRunner {
 
 	@Autowired
 	private DeleteHITs deleteHITs;
+
+	@Autowired
+	private DeleteHITsByQualification deleteHITsByQualification;
+
+	@Autowired
+	private ExtendHITs extendHITs;
 
 	@Autowired
 	private ListHITs listHITs;
@@ -51,6 +63,14 @@ public class MTurkAdminCAST implements CommandLineRunner {
 			listHITs.listHITs();
 		} else if (properties.getFunction().equalsIgnoreCase("unsubmitted")) {
 			getUnsubmittedHITs.getUnsubmittedAssignments();
+		} else if (properties.getFunction().equalsIgnoreCase("extend")) {
+			extendHITs.extendAssignments();
+		} else if (properties.getFunction().equalsIgnoreCase("approved")) {
+			getApprovedHITs.getSubmittedAssignments();
+		} else if (properties.getFunction().equalsIgnoreCase("allsubmitted")) {
+			getAllSubmittedHITs.getSubmittedAssignments();
+		} else if (properties.getFunction().equalsIgnoreCase("deletebyqual")) {
+			deleteHITsByQualification.deleteAssignments();
 		}
 	}
 

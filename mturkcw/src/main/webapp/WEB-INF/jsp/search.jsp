@@ -31,15 +31,15 @@
 </style>
 </head>
 <body class="formstyle">
-	<form:form action="./searchResults" method="post"
+	<form:form action="./searchResultsBERT" method="post"
 		modelAttribute="searchObject">
 		<input type="hidden" name="assignmentId" value="${assignmentId}"></input>
 		<div align="center" class="divstyle">
-			<div class="spanstyle"><b>Type a query that you have entered in a search engine within the past week:</b></div>
+			<div class="spanstyle"><b>Type a query that you entered into a search engine within the past week.</b></div>
 			<form:input path="queryString" size="100" id="queryInput"/>
 		</div>
 		<div align="center" class="divstyle">
-			<div class="spanstyle"><b>Please describe within a few sentences what this query intended to find:</b></div>
+			<div class="spanstyle"><b>Please describe in a few sentences what this query intended to find,<br/>i.e., what would make a document relevant or useful.</b></div>
 			<form:textarea path="queryDescription" rows="5" cols="100" id="descriptionInput"/>
 		</div>
 		<div align="center">

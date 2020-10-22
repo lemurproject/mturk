@@ -3,6 +3,7 @@ package org.lemurproject.mturkadmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import com.amazonaws.services.mturk.AmazonMTurk;
-import com.amazonaws.services.mturk.model.DeleteHITRequest;
 import com.amazonaws.services.mturk.model.UpdateExpirationForHITRequest;
 
 @Component
@@ -54,14 +54,16 @@ public class DeleteHITs {
 			try {
 				UpdateExpirationForHITRequest updateHITRequest = new UpdateExpirationForHITRequest();
 				updateHITRequest.setHITId(hitId);
-				updateHITRequest.setExpireAt(new Date(0l));
+				// updateHITRequest.setExpireAt(new Date(0l));
+				Date date = new GregorianCalendar(2020, 11, 30).getTime();
+				updateHITRequest.setExpireAt(date);
 				client.updateExpirationForHIT(updateHITRequest);
 				System.out.println("Expired HIT: " + hitId);
 
-				DeleteHITRequest deleteHITRequest = new DeleteHITRequest();
-				deleteHITRequest.setHITId(hitId);
-				client.deleteHIT(deleteHITRequest);
-				System.out.println("Deleted: " + hitId);
+//				DeleteHITRequest deleteHITRequest = new DeleteHITRequest();
+//				deleteHITRequest.setHITId(hitId);
+//				client.deleteHIT(deleteHITRequest);
+//				System.out.println("Deleted: " + hitId);
 			} catch (Exception e) {
 				System.out.println("Could not delte HIT: " + hitId);
 			}

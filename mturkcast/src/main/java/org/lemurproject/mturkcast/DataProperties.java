@@ -14,6 +14,9 @@ public class DataProperties {
 	@Value("${hit.map}")
 	private String hitMap;
 
+	@Value("${topic.name.map}")
+	private String topicNameMap;
+
 	@Value("${seen.file}")
 	private String seenFile;
 
@@ -94,6 +97,14 @@ public class DataProperties {
 
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
+	}
+
+	public String getTopicNameMap() {
+		return topicNameMap;
+	}
+
+	public void setTopicNameMap(String topicNameMap) {
+		this.topicNameMap = topicNameMap;
 	}
 
 }

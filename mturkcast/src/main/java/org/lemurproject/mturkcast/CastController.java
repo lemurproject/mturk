@@ -82,8 +82,9 @@ public class CastController {
 	}
 
 	@GetMapping({ "/deleteTopic", "/deleteTopic?" })
-	public void deleteTopic(@RequestParam(name = "topicId") String topicId) {
-
+	public String deleteTopic(@RequestParam(name = "topic") String topic) {
+		castService.deleteTopic(topic);
+		return "success";
 	}
 
 	@GetMapping({ "/addtopics" })
@@ -95,6 +96,14 @@ public class CastController {
 		return "newtopics";
 	}
 
+	@GetMapping({ "/addhit" })
+	public String addhit(@RequestParam(name = "topic") String topic, @RequestParam(name = "hitId") String hitId,
+			@RequestParam(name = "hitMapFile") String hitMapFile, HttpServletRequest request, Model model)
+			throws IOException {
+		castService.addHIT(topic, hitId, hitMapFile);
+		return "success";
+	}
+
 	@GetMapping({ "/addqualification" })
 	public String addqualification(@RequestParam(name = "topicId") String topicId,
 			@RequestParam(name = "qualification") String qualification, HttpServletRequest request, Model model)
@@ -102,6 +111,14 @@ public class CastController {
 		String newQualificationString = castService.addQualification(topicId, qualification);
 		model.addAttribute("newTopics", newQualificationString);
 		return "newtopics";
+	}
+
+	@GetMapping({ "/addtopicname" })
+	public String addtopicname(@RequestParam(name = "topic") String topic,
+			@RequestParam(name = "topicName") String topicName, HttpServletRequest request, Model model)
+			throws IOException {
+		castService.addTopicName(topic, topicName);
+		return "success";
 	}
 
 	@GetMapping({ "/transfertopic" })

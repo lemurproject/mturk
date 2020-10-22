@@ -24,7 +24,7 @@ public class FindDuplicates {
 	private Map<String, HITObject> hitMap;
 
 	public static void main(String[] args) throws IOException {
-		Scanner scanner = new Scanner(new File("submitteddocuments_43_20200602.csv"));
+		Scanner scanner = new Scanner(new File("submitteddocuments_70_20201004.csv"));
 		Map<String, Map<String, List<String>>> dupMap = new HashMap<String, Map<String, List<String>>>();
 		while (scanner.hasNext()) {
 			String docLine = scanner.nextLine();
@@ -38,7 +38,7 @@ public class FindDuplicates {
 		}
 
 		Writer dupsWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream("duplicates_43_3.csv"), "UTF8"));
+				new OutputStreamWriter(new FileOutputStream("duplicates_70_2.csv"), "UTF8"));
 		for (String queryId : dupMap.keySet()) {
 			for (String docId : dupMap.get(queryId).keySet()) {
 				if (dupMap.get(queryId).get(docId).size() > 1) {
@@ -55,7 +55,7 @@ public class FindDuplicates {
 	}
 
 	public List<AnswerObject> getAllHITs() throws IOException {
-		Reader reader = Files.newBufferedReader(Paths.get("mturk_cast_43.csv"));
+		Reader reader = Files.newBufferedReader(Paths.get("mturk_cast_45.csv"));
 		CsvToBean<HITObject> csvToBean = new CsvToBeanBuilder(reader).withType(HITObject.class)
 				.withIgnoreLeadingWhiteSpace(true).build();
 		Iterator<HITObject> hitIterator = csvToBean.iterator();

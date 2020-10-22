@@ -1,13 +1,21 @@
 package org.lemurproject.cw;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -18,6 +26,8 @@ import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+
 @Component("searchService")
 public class SearchService {
 
@@ -26,14 +36,21 @@ public class SearchService {
 
 	private CloudSolrClient solrClient;
 
+	private final CloseableHttpClient httpClient = HttpClients.createDefault();
+
+//	private static Socket clientSocket;
+//	private static PrintWriter out;
+//	private static BufferedReader in;
+
 	@PostConstruct
-	public void init() {
+	public void init() throws UnknownHostException, IOException {
 		List<String> zkHosts = new ArrayList<String>();
 		String zkHost = String.join(":", searchProps.getHostName(), searchProps.getHostPort());
 		zkHosts.add(zkHost);
 		Builder builder = new CloudSolrClient.Builder(zkHosts, java.util.Optional.empty());
 		solrClient = builder.build();
 		solrClient.setDefaultCollection(searchProps.getCollectionName());
+//		startConnection("10.1.1.35", 23232);
 	}
 
 	public SearchResult search(String queryString) throws SolrServerException, IOException {
@@ -83,12 +100,46 @@ public class SearchService {
 			searchResult.setTitle((String) results.get(i).get("title"));
 			searchResult.setUrl((String) results.get(i).get("url"));
 			searchResult.setScore((Float) results.get(i).get("score"));
-			searchResult.setSnippet(String.join("", highlightText, "..."));
+			searchResult.setHighlight(String.join("", highlightText, "..."));
 			documentResults.add(searchResult);
 		}
 		SearchResult searchResult = new SearchResult();
 		searchResult.setQuery(queryString);
 		searchResult.setDocuments(documentResults);
+
+		return searchResult;
+	}
+
+	public SearchResult bertSearch(String queryString) throws IOException {
+//		out.println(queryString);
+//		String resp = in.readLine();
+//		System.out.println(resp);
+
+		String url = "http://boston.lti.cs.cmu.edu/boston-2-27/search/";
+		String resp = null;
+		String query = queryString.replace(" ", "%20");
+		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
+		try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
+			resp = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
+			// System.out.println(resp);
+		} catch (Exception e) {
+			System.out.println("Failed");
+		}
+
+		Gson gson = new Gson();
+		DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			doc.setHighlight(highlightText);
+
+		}
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery(queryString);
+		searchResult.setDocuments(Arrays.asList(docs));
 
 		return searchResult;
 	}
@@ -115,7 +166,7 @@ public class SearchService {
 			documentResult.setTitle(String.join("", "Doc Title ", String.valueOf(i)));
 			documentResult.setUrl(urls.get(i));
 			documentResult.setScore(Float.valueOf(i));
-			documentResult.setSnippet(String.join("", "Doc Snippet ", String.valueOf(i),
+			documentResult.setHighlight(String.join("", "Doc Snippet ", String.valueOf(i),
 					" lalalalalalalla lalalalalal lalalalalalala lalalalalala lalalalalalalala lalalalalalala lalalalalala llalalala lalalalalalala lalalalalalala lalalalalalala lalalalalla lalala"));
 			documentResults.add(documentResult);
 		}
@@ -144,5 +195,24 @@ public class SearchService {
 
 		return doctext;
 	}
+
+//	public static void startConnection(String ip, int port) throws UnknownHostException, IOException {
+//		clientSocket = new Socket(ip, port);
+//		out = new PrintWriter(clientSocket.getOutputStream(), true);
+//		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//	}
+//
+//	public static String sendMessage(String msg) throws IOException {
+//		out.println(msg);
+//		String resp = in.readLine();
+//		System.out.println("Response: " + resp);
+//		return resp;
+//	}
+//
+//	public static void stopConnection() throws IOException {
+//		in.close();
+//		out.close();
+//		clientSocket.close();
+//	}
 
 }

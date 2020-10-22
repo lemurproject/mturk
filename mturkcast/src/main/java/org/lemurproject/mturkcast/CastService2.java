@@ -55,6 +55,7 @@ public class CastService2 {
 	private Writer hitWriter;
 	// private Writer stateWriter;
 
+	private Map<String, String> topicNameMap;
 	private Map<String, List<HITObject>> topicToDataList;
 	private Map<String, Map<String, Integer>> userQueues;
 	private Map<String, Map<String, List<HITSimpleObject>>> userPrevHits;
@@ -148,55 +149,56 @@ public class CastService2 {
 		boolean isAssignable = false;
 		GetHITRequest getHITRequest = new GetHITRequest();
 		getHITRequest.setHITId(prevHIT.getMturkHitId());
-		try {
-			GetHITResult hitResult = client.getHIT(getHITRequest);
-			HIT hit = hitResult.getHIT();
-			System.out.println("Previous hit status is: " + hit.getHITStatus());
+		// try {
+		GetHITResult hitResult = client.getHIT(getHITRequest);
+		HIT hit = hitResult.getHIT();
+		System.out.println("Previous hit status is: " + hit.getHITStatus());
 
-			// If HIT is still assignable, add additional HIT to experiment
-			if (hit.getHITStatus().equalsIgnoreCase("Assignable")) {
-				isAssignable = true;
+		// If HIT is still assignable, add additional HIT to experiment
+		if (hit.getHITStatus().equalsIgnoreCase("Assignable")) {
+			isAssignable = true;
 
-				// Remove previous HIT
-				// TODO delete from mTurk
-				userPrevHits.get(workerId).get(topicId).remove(prevHIT);
-				System.out.println("Removed (" + prevHIT.toString() + ") for topic (" + topicId
-						+ ") because HIT was not submitted");
+			// Remove previous HIT
+			// TODO delete from mTurk
+			userPrevHits.get(workerId).get(topicId).remove(prevHIT);
+			String topicName = topicNameMap.get(topicId);
+			System.out.println(
+					"Removed (" + prevHIT.toString() + ") for topic (" + topicId + ") because HIT was not submitted");
 
-				// Create new HIT
-				CreateHITRequest request = new CreateHITRequest();
-				String questionSample = new String(Files.readAllBytes(Paths.get(dataProperties.getQuestionFilename())));
-				request.setQuestion(questionSample);
+			// Create new HIT
+			CreateHITRequest request = new CreateHITRequest();
+			String questionSample = new String(Files.readAllBytes(Paths.get(dataProperties.getQuestionFilename())));
+			request.setQuestion(questionSample);
 
-				request.setMaxAssignments(1);
-				long lifetime = Long.valueOf(dataProperties.getHitLifetime()).longValue();
-				request.setLifetimeInSeconds(lifetime);
-				request.setAssignmentDurationInSeconds(900l);
-				request.setReward("0.45");
-				request.setTitle(
-						"How relevant is the document to the question/conversation?  (Topic Id: " + topicId + ")");
-				request.setKeywords("document, relevance");
-				request.setDescription(
-						"Given the conversation, how relevant is the given document to the last topic of the conversation? (Topic Id: "
-								+ topicId + ")");
-				request.setQualificationRequirements(qualificationMap.get(topicId));
+			request.setMaxAssignments(1);
+			long lifetime = Long.valueOf(dataProperties.getHitLifetime()).longValue();
+			request.setLifetimeInSeconds(lifetime);
+			request.setAssignmentDurationInSeconds(900l);
+			request.setReward("0.45");
+			request.setTitle(
+					"How relevant is the document to the question/conversation?  (Topic Id: " + topicName + ")");
+			request.setKeywords("document, relevance");
+			request.setDescription(
+					"Given the conversation, how relevant is the given document to the last topic of the conversation? (Topic Id: "
+							+ topicName + ")");
+			request.setQualificationRequirements(qualificationMap.get(topicId));
 
-				CreateHITResult result = client.createHIT(request);
-				String newHITId = result.getHIT().getHITId();
-				hitIdToTopic.put(newHITId, topicId);
-				hitWriter.write(String.join("", newHITId, ",", topicId, "\n"));
-				hitWriter.flush();
-				System.out.println("Created new HIT (" + newHITId + ") for topic (" + topicId + ")");
-			} else if (hit.getHITStatus().equalsIgnoreCase(HITStatus.Reviewable.toString())) {
-				// Remove previous HIT
-				// TODO delete from mTurk
-				userPrevHits.get(workerId).get(topicId).remove(prevHIT);
-				System.out.println("Removed (" + prevHIT.toString() + ") for topic (" + topicId
-						+ ") because HIT has been submitted");
-			}
-		} catch (Exception e) {
-			System.out.println("No HIT for HITId: " + prevHIT.getHitId());
+			CreateHITResult result = client.createHIT(request);
+			String newHITId = result.getHIT().getHITId();
+			hitIdToTopic.put(newHITId, topicId);
+			hitWriter.write(String.join("", newHITId, ",", topicId, "\n"));
+			hitWriter.flush();
+			System.out.println("Created new HIT (" + newHITId + ") for topic (" + topicId + ")");
+		} else if (hit.getHITStatus().equalsIgnoreCase(HITStatus.Reviewable.toString())) {
+			// Remove previous HIT
+			// TODO delete from mTurk
+			userPrevHits.get(workerId).get(topicId).remove(prevHIT);
+			System.out.println(
+					"Removed (" + prevHIT.toString() + ") for topic (" + topicId + ") because HIT has been submitted");
 		}
+//		} catch (Exception e) {
+//			System.out.println("No HIT for HITId: " + prevHIT.getHitId());
+//		}
 		return isAssignable;
 	}
 
@@ -267,7 +269,7 @@ public class CastService2 {
 		seenWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(dataProperties.getSeenFile(), true), "UTF8"));
 		if (!seenFileExists) {
-			seenWriter.write("hitId,queryNum,topicNum,subQueryNum,workerId\n");
+			seenWriter.write("hitId,queryNum,topicNum,subQueryNum,workerId,mturkHitId\n");
 			seenWriter.flush();
 		} else {
 			Reader stateReader = Files.newBufferedReader(Paths.get(dataProperties.getSeenFile()));
@@ -280,6 +282,21 @@ public class CastService2 {
 					userQueues.putIfAbsent(seenObject.getWorkerId(), new HashMap<String, Integer>());
 					userQueues.get(seenObject.getWorkerId()).put(seenObject.getTopicNum(),
 							Integer.valueOf(seenObject.getHitId()) + 1);
+					userPrevHits.putIfAbsent(seenObject.getWorkerId(), new HashMap<String, List<HITSimpleObject>>());
+					userPrevHits.get(seenObject.getWorkerId()).putIfAbsent(seenObject.getTopicNum(),
+							new ArrayList<HITSimpleObject>());
+					userPrevHits.get(seenObject.getWorkerId()).get(seenObject.getTopicNum()).add(seenObject);
+				}
+			}
+			for (String workerId : userPrevHits.keySet()) {
+				Map<String, List<HITSimpleObject>> workerHits = userPrevHits.get(workerId);
+				for (String topicId : workerHits.keySet()) {
+					List<HITSimpleObject> workerTopicHits = workerHits.get(topicId);
+					if (workerTopicHits.size() > 0) {
+						for (int i = 0; i < workerTopicHits.size() - 1; i++) {
+							userPrevHits.get(workerId).get(topicId).remove(i);
+						}
+					}
 				}
 			}
 		}
@@ -302,6 +319,15 @@ public class CastService2 {
 			qualificationMap.get(lineParts[0]).add(workerRequirement);
 		}
 		scanner.close();
+
+		topicNameMap = new HashMap<String, String>();
+		Scanner topicScanner = new Scanner(new File(dataProperties.getTopicNameMap()));
+		while (topicScanner.hasNext()) {
+			String topicLine = topicScanner.nextLine();
+			String[] topicLineParts = topicLine.split(",");
+			topicNameMap.put(topicLineParts[0].trim(), topicLineParts[1].trim());
+		}
+		topicScanner.close();
 	}
 
 	public List<String> listUserQueues() {
@@ -402,7 +428,7 @@ public class CastService2 {
 		String qualificationString = String.join(",", topicId, qualification);
 		qualificationWriter.write("\n");
 		qualificationWriter.write(qualificationString);
-		qualificationWriter.flush();
+		qualificationWriter.close();
 
 		return qualificationString;
 	}
@@ -438,6 +464,36 @@ public class CastService2 {
 			topicToDataList.get(topic).add(hitObject);
 		}
 		return newTopicsBuffer.toString();
+	}
+
+	public void addHIT(String topic, String HITId, String hitMapFile) throws IOException {
+		hitIdToTopic.put(HITId, topic);
+		boolean hitFileExists = new File(hitMapFile).exists();
+		Writer topicHitWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(hitMapFile, true), "UTF8"));
+		if (!hitFileExists) {
+			topicHitWriter.write("hitId,dataRowId\n");
+		}
+		topicHitWriter.write(String.join(",", HITId, topic));
+		topicHitWriter.write("\n");
+		topicHitWriter.close();
+	}
+
+	public void addTopicName(String topic, String topicName) throws IOException {
+		if (topicNameMap == null) {
+			topicNameMap = new HashMap<String, String>();
+		}
+		topicNameMap.put(topic, topicName);
+		System.out.println("Adding topic: " + topic + " - " + topicName);
+
+		// Add to qualification file
+		BufferedWriter topicWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(dataProperties.getTopicNameMap(), true), "UTF8"));
+		String topicString = String.join(",", topic, topicName);
+		topicWriter.write(topicString);
+		topicWriter.write("\n");
+		topicWriter.close();
+		System.out.println("Wrote topic: " + topicString);
 	}
 
 }
