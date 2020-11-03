@@ -115,7 +115,7 @@ public class SearchService {
 //		String resp = in.readLine();
 //		System.out.println(resp);
 
-		String url = "http://boston.lti.cs.cmu.edu/boston-2-27/search/";
+		String url = "http://boston.lti.cs.cmu.edu/boston-2-25/search/";
 		String resp = null;
 		String query = queryString.replace(" ", "%20");
 		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
@@ -129,6 +129,20 @@ public class SearchService {
 		Gson gson = new Gson();
 		DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
 		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				}
+			}
+			doc.setTitle(titleText);
+
 			String highlightText = doc.getHighlight();
 			highlightText = highlightText.replaceAll("<b>", "");
 			highlightText = highlightText.replaceAll("</b>", "");

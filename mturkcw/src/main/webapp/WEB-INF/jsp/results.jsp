@@ -15,7 +15,7 @@
 	margin-top: 10px;
 	margin-bottom: 20px;
 	margin-left: 50px;
-	margin-right: 20px;
+	margin-right: 300px;
 }
 
 .tablestyle {
@@ -25,6 +25,7 @@
 .cellstyle {
 	padding-left: 5px;
 	padding-right: 5px;
+	padding-bottom: 5px;
 }
 
 .titlestyle {
@@ -81,7 +82,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td  class="cellstyle"><div>${document.highlight}</div> <br /></td>
+					<td  class="cellstyle"><div>${document.highlight}</div> <br /><br/></td>
 				</tr>
 			</c:forEach>
 		</table>
