@@ -6,6 +6,7 @@ public class SearchResult {
 
 	private String query;
 	private String description;
+	private String category;
 	private List<DocumentResult> documents;
 	private String assignmentId;
 
@@ -39,6 +40,14 @@ public class SearchResult {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }

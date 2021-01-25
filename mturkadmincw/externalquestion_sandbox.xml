@@ -1,4 +1,4 @@
-q<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
+<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
   <ExternalURL>https://boston.lti.cs.cmu.edu/boston-1-36/cast/</ExternalURL>
   <FrameHeight>0</FrameHeight>
 </ExternalQuestion>

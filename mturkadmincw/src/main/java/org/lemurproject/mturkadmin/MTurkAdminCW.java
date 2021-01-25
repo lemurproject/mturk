@@ -18,6 +18,9 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private GetSubmittedHITs getSubmittedHITs;
 
 	@Autowired
+	private DeleteHITsByQualification deleteHITsByQualification;
+
+	@Autowired
 	private MTurkProperties properties;
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -33,6 +36,8 @@ public class MTurkAdminCW implements CommandLineRunner {
 			getSubmittedHITs.getSubmittedAssignments();
 		} else if (properties.getFunction().equalsIgnoreCase("approve")) {
 
+		} else if (properties.getFunction().equalsIgnoreCase("deletebyqual")) {
+			deleteHITsByQualification.deleteAssignments();
 		}
 	}
 

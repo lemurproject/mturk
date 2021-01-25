@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringJoiner;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +39,8 @@ public class SearchService {
 
 	private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
+	private List<String> categories;
+
 //	private static Socket clientSocket;
 //	private static PrintWriter out;
 //	private static BufferedReader in;
@@ -51,6 +54,43 @@ public class SearchService {
 		solrClient = builder.build();
 		solrClient.setDefaultCollection(searchProps.getCollectionName());
 //		startConnection("10.1.1.35", 23232);
+		// define categories:
+		categories = new ArrayList<String>();
+		categories.add("Arts");
+		categories.add("Crafts & Hobbies");
+		categories.add("Economy & Finance");
+		categories.add("Education");
+		categories.add("Entertainment");
+		categories.add("Food & Drink");
+		categories.add("Health & Wellness");
+		categories.add("Home");
+		categories.add("Parenting");
+		categories.add("Pets");
+		categories.add("Politics");
+		categories.add("Recreation");
+		categories.add("Relationships");
+		categories.add("Science");
+		categories.add("Shopping");
+		categories.add("Spirituality");
+		categories.add("Sports");
+		categories.add("Style");
+		categories.add("Technology");
+		categories.add("Travel");
+	}
+
+	public List<String> getSearchCategories() {
+		List<String> searchCategories = new ArrayList<String>();
+
+		while (searchCategories.size() < 5) {
+			Random rand = new Random();
+			int int_random = rand.nextInt(20);
+			String cat = categories.get(int_random);
+			if (!searchCategories.contains(cat)) {
+				searchCategories.add(cat);
+			}
+		}
+
+		return searchCategories;
 	}
 
 	public SearchResult search(String queryString) throws SolrServerException, IOException {
@@ -111,11 +151,10 @@ public class SearchService {
 	}
 
 	public SearchResult bertSearch(String queryString) throws IOException {
-//		out.println(queryString);
-//		String resp = in.readLine();
-//		System.out.println(resp);
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery(queryString);
 
-		String url = "http://boston.lti.cs.cmu.edu/boston-2-25/search/";
+		String url = "http://boston.lti.cs.cmu.edu/boston-2-29/search/";
 		String resp = null;
 		String query = queryString.replace(" ", "%20");
 		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
@@ -127,34 +166,36 @@ public class SearchService {
 		}
 
 		Gson gson = new Gson();
-		DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
-		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+		try {
+			DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
+			for (DocumentResult doc : docs) {
+				String titleText = doc.getTitle();
+				titleText = titleText.replaceAll("<b>", "");
+				titleText = titleText.replaceAll("</b>", "");
+				titleText = titleText.replaceAll("em>", "b>");
+				titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
 
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				if (titleText.length() > 100) {
+					int endIndex = titleText.indexOf(" ", 100);
+					if (endIndex > 100) {
+						titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+					}
 				}
+				doc.setTitle(titleText);
+
+				String highlightText = doc.getHighlight();
+				highlightText = highlightText.replaceAll("<b>", "");
+				highlightText = highlightText.replaceAll("</b>", "");
+				highlightText = highlightText.replaceAll("em>", "b>");
+				highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+				highlightText = String.join(" ", highlightText, "..");
+				doc.setHighlight(highlightText);
+
 			}
-			doc.setTitle(titleText);
-
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			doc.setHighlight(highlightText);
-
+			searchResult.setDocuments(Arrays.asList(docs));
+		} catch (Exception e) {
+			System.out.println("No resulsts for query: " + query);
 		}
-		SearchResult searchResult = new SearchResult();
-		searchResult.setQuery(queryString);
-		searchResult.setDocuments(Arrays.asList(docs));
-
 		return searchResult;
 	}
 

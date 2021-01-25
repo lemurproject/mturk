@@ -15,29 +15,41 @@
 	margin-top: 10px;
 	margin-bottom: 20px;
 	margin-left: 50px;
-	margin-right: 20px;
+	margin-right: 50px;
 }
 
 .tablestyle {
-	width: 100%;
+	width: 60%;
 }
 
 .cellstyle {
 	padding-left: 5px;
 	padding-right: 5px;
+	padding-bottom: 5px;
+}
+
+.snippetcellstyle {
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 25px;
 }
 
 .titlestyle {
-	font-size: 150%;
+	font-size: 125%;
 }
 
 .urlstyle {
-	font-size: 90%;
+	font-size: 80%;
 	color: gray;
+}
+.snippetstyle {
+	font-size: 90%;
 }
 
 .instructionstyle {
-	margin-top: 10px; font-size : 150%;
+	width: 60%;
+	margin-top: 10px;
+	font-size: 150%;
 	color: blue;
 	font-size: 150%;
 }
@@ -48,32 +60,42 @@
 </style>
 </head>
 <body class="formstyle">
-	<form:form action="https://workersandbox.mturk.com/mturk/externalSubmit" method="post"
-		modelAttribute="searchResult">
-		<form:input path="assignmentId" type="hidden" value="${searchResult.assignmentId}"/>
-		<form:input path="query" type="hidden" value="${searchResult.query}"/>
-		<form:input path="description" type="hidden" value="${searchResult.description}"/>
+	<form:form
+		action="https://workersandbox.mturk.com/mturk/externalSubmit"
+		method="post" modelAttribute="searchResult">
+		<form:input path="assignmentId" type="hidden"
+			value="${searchResult.assignmentId}" />
+		<form:input path="query" type="hidden" value="${searchResult.query}" />
+		<form:input path="description" type="hidden"
+			value="${searchResult.description}" />
+		<form:input path="category" type="hidden"
+			value="${searchResult.category}" />
 		<div align="left">
 			<label>Searched for: </label>&nbsp;&nbsp;
-			<form:input path="query" size="100" disabled="true"/>
+			<form:input path="query" size="100" disabled="true" />
 		</div>
-		<div class="instructionstyle">Select the documents that are
-			relevant to your query.</div>
+		<div class="instructionstyle">Please note that these documents are from the year 2009.  
+		Place a check mark next to every document that you think is worth examining.  You do not need to open
+		the links (many do not work any more), but check the documents that you feel you would open.<br/>
+		</div>
 		<hr />
 		<table class="tablestyle">
 			<col width="10">
-			<c:forEach items="${searchResult.documents}" var="document" varStatus="tagStatus">
-				<form:input path="documents[${tagStatus.index}].docId" type="hidden" value="${document.docId}"/>
+			<c:forEach items="${searchResult.documents}" var="document"
+				varStatus="tagStatus">
+				<form:input path="documents[${tagStatus.index}].docId" type="hidden"
+					value="${document.docId}" />
 				<tr>
 					<td></td>
 					<td class="cellstyle"><div class="urlstyle">${document.url}</div></td>
 				</tr>
 				<tr>
-					<td class="cellstyle"><form:checkbox path="documents[${tagStatus.index}].selected"
-						id="${document.docId}" name="${document.docId}" value="selected"/></td>
-					<td  class="cellstyle">
+					<td class="cellstyle"><form:checkbox
+							path="documents[${tagStatus.index}].selected"
+							id="${document.docId}" name="${document.docId}" value="selected" /></td>
+					<td class="cellstyle">
 						<div>
-						<a class="titlestyle" target="_blank" href="${document.url}">${document.title}</a>
+							<a class="titlestyle" target="_blank" href="${document.url}">${document.title}</a>
 							<!--<a class="titlestyle" href="./document?docid=${document.docId}">${document.title}</a>
 							 <a class="titlestyle" href="./documentFrame?docurl=${document.url}">${document.title}</a> -->
 						</div>
@@ -81,7 +103,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td  class="cellstyle"><div>${document.highlight}</div> <br /></td>
+					<td class="snippetcellstyle"><div class="snippetstyle">${document.highlight}</div></td>
 				</tr>
 			</c:forEach>
 		</table>

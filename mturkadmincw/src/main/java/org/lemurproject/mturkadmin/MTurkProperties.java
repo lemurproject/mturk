@@ -20,6 +20,9 @@ public class MTurkProperties {
 	@Value("${qualification.type}")
 	private String qualificationType;
 
+	@Value("${hit.filename}")
+	private String hitFilename;
+
 	@Value("${judgeddocuments.csv}")
 	private String judgedDocumentsCsvName;
 
@@ -61,6 +64,14 @@ public class MTurkProperties {
 
 	public void setEnvironment(String environment) {
 		this.environment = environment;
+	}
+
+	public String getHitFilename() {
+		return hitFilename;
+	}
+
+	public void setHitFilename(String hitFilename) {
+		this.hitFilename = hitFilename;
 	}
 
 }
