@@ -183,39 +183,14 @@ button.one {
 <script type="text/javascript"></script>
 </head>
 <body class="formstyle">
-	<form:form action="https://boston.lti.cs.cmu.edu/boston-2-34/searchResultsBERT" method="post"
+	<form:form action="/searchResultsTest" method="post"
 		modelAttribute="searchObject">
-		<input type="hidden" name="assignmentId" value="${assignmentId}"></input>
-		<div align="center" class="divstyle">
-			<b>Select a category that you have searched on within the past
-				week.</b>
-		</div>
-		<div align="center" class="divstyle">
-		<table class="tablestyle">
-			<tr>
-				<td class="cellstyle"><button class="one" type="button">Shopping</button></td>
-				<td class="cellstyle"><button class="two" type="button">Travel</button></td>
-				<td class="cellstyle"><button class="three" type="button">Home</button></td>
-				<td class="cellstyle"><button class="four" type="button">Food & Drink</button></td>
-				<td class="cellstyle"><button class="five" type="button">Health & Wellness</button></td>
-			</tr>
-		</table>
-		</div>
 		<div align="center" class="divstyle">
 			<div class="spanstyle">
 				<b>Type a query that you entered into a search
 					engine within the past week.</b>
 			</div>
 			<form:input path="queryString" size="100" id="queryInput" />
-		</div>
-		<div align="center" class="divstyle">
-			<div class="spanstyle">
-				<b>Please describe in a few sentences what this query intended
-					to find,<br />i.e., what would make a document relevant or useful.
-				</b>
-			</div>
-			<form:textarea path="queryDescription" rows="5" cols="100"
-				id="descriptionInput" />
 		</div>
 		<div align="center">
 			<input type="submit" name="submitButton" id="submitButton"

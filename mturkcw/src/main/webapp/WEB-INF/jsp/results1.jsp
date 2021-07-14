@@ -62,44 +62,8 @@
 </head>
 <body class="formstyle">
 	<form:form
-		action="https://workersandbox.mturk.com/mturk/externalSubmit"
+		action="https://www.mturk.com/mturk/externalSubmit"
 		method="post" modelAttribute="searchResult">
-		<form:input path="assignmentId" type="hidden"
-			value="${searchResult.assignmentId}" />
-			
-		<form:input path="prevQuery" type="hidden"
-			value="${searchResult.prevQuery}" />
-		<form:input path="prevDescription" type="hidden"
-			value="${searchResult.prevDescription}" />
-		<form:input path="prevCategory" type="hidden"
-			value="${searchResult.prevCategory}" />
-		<form:input path="prevDoc1id" type="hidden" value="${searchResult.prevDoc1id}" />
-		<form:input path="prevDoc1selection" type="hidden" value="${searchResult.prevDoc1selection}" />
-		<form:input path="prevDoc2id" type="hidden" value="${searchResult.prevDoc2id}" />
-		<form:input path="prevDoc2selection" type="hidden" value="${searchResult.prevDoc2selection}" />
-		<form:input path="prevDoc3id" type="hidden" value="${searchResult.prevDoc3id}" />
-		<form:input path="prevDoc3selection" type="hidden" value="${searchResult.prevDoc3selection}" />
-		<form:input path="prevDoc4id" type="hidden" value="${searchResult.prevDoc4id}" />
-		<form:input path="prevDoc4selection" type="hidden" value="${searchResult.prevDoc4selection}" />
-		<form:input path="prevDoc5id" type="hidden" value="${searchResult.prevDoc5id}" />
-		<form:input path="prevDoc5selection" type="hidden" value="${searchResult.prevDoc5selection}" />
-		<form:input path="prevDoc6id" type="hidden" value="${searchResult.prevDoc6id}" />
-		<form:input path="prevDoc6selection" type="hidden" value="${searchResult.prevDoc6selection}" />
-		<form:input path="prevDoc7id" type="hidden" value="${searchResult.prevDoc7id}" />
-		<form:input path="prevDoc7selection" type="hidden" value="${searchResult.prevDoc7selection}" />
-		<form:input path="prevDoc8id" type="hidden" value="${searchResult.prevDoc8id}" />
-		<form:input path="prevDoc8selection" type="hidden" value="${searchResult.prevDoc8selection}" />
-		<form:input path="prevDoc9id" type="hidden" value="${searchResult.prevDoc9id}" />
-		<form:input path="prevDoc9selection" type="hidden" value="${searchResult.prevDoc9selection}" />
-		<form:input path="prevDoc10id" type="hidden" value="${searchResult.prevDoc10id}" />
-		<form:input path="prevDoc10selection" type="hidden" value="${searchResult.prevDoc10selection}" />
-		<form:input path="prevDoc11id" type="hidden" value="${searchResult.prevDoc11id}" />
-		<form:input path="prevDoc11selection" type="hidden" value="${searchResult.prevDoc11selection}" />
-		<form:input path="prevDoc12id" type="hidden" value="${searchResult.prevDoc12id}" />
-		<form:input path="prevDoc12selection" type="hidden" value="${searchResult.prevDoc12selection}" />
-		<form:input path="prevDoc13id" type="hidden" value="${searchResult.prevDoc13id}" />
-		<form:input path="prevDoc13selection" type="hidden" value="${searchResult.prevDoc13selection}" />
-			
 		<form:input path="assignmentId" type="hidden"
 			value="${searchResult.assignmentId}" />
 		<form:input path="query" type="hidden" value="${searchResult.query}" />

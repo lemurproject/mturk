@@ -18,7 +18,19 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private GetSubmittedHITs getSubmittedHITs;
 
 	@Autowired
+	private ApproveHITs approveHITs;
+
+	@Autowired
 	private DeleteHITsByQualification deleteHITsByQualification;
+
+	@Autowired
+	private CreateMTurkQualificationType createQualType;
+
+	@Autowired
+	private GetMTurkQualifications getQualResults;
+
+	@Autowired
+	private AcceptMTurkQualificationResults acceptQualResults;
 
 	@Autowired
 	private MTurkProperties properties;
@@ -35,9 +47,15 @@ public class MTurkAdminCW implements CommandLineRunner {
 		} else if (properties.getFunction().equalsIgnoreCase("get")) {
 			getSubmittedHITs.getSubmittedAssignments();
 		} else if (properties.getFunction().equalsIgnoreCase("approve")) {
-
+			approveHITs.approveAssignments();
 		} else if (properties.getFunction().equalsIgnoreCase("deletebyqual")) {
 			deleteHITsByQualification.deleteAssignments();
+		} else if (properties.getFunction().equalsIgnoreCase("createqual")) {
+			createQualType.createQualification();
+		} else if (properties.getFunction().equalsIgnoreCase("getqual")) {
+			getQualResults.getQualifications();
+		} else if (properties.getFunction().equalsIgnoreCase("acceptqual")) {
+			acceptQualResults.acceptQualificationRequests();
 		}
 	}
 

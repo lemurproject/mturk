@@ -1,0 +1,47 @@
+<QuestionForm xmlns='http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd'>  
+  <Question>
+      <QuestionIdentifier>self_report</QuestionIdentifier>
+      <DisplayName>Q1</DisplayName>
+      <IsRequired>true</IsRequired>
+      <QuestionContent>
+        <Text> Which documents would you select? </Text>
+      </QuestionContent>
+      <AnswerSpecification>
+        <SelectionAnswer>
+          <StyleSuggestion>checkbox</StyleSuggestion>
+          <Selections>
+            <Selection>
+              <SelectionIdentifier>doc1</SelectionIdentifier>
+              <Text> </Text>
+              <FormattedContent><![CDATA[ <b>Relevant Document 1</b> - Sample Text ]]></FormattedContent>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc2</SelectionIdentifier>
+              <Text>  Relevant Document 2 - Sample Text</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc3</SelectionIdentifier>
+              <Text>  Relevant Document 3 - Sample Text</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc4</SelectionIdentifier>
+              <Text>  Non Relevant Document 1 - Sample Text</Text>
+            </Selection>
+          </Selections>
+        </SelectionAnswer>
+      </AnswerSpecification>
+  </Question>
+  <Question>
+      <QuestionIdentifier>test_query</QuestionIdentifier>
+      <DisplayName>Q2</DisplayName>
+      <IsRequired>true</IsRequired>
+      <QuestionContent>
+         <Text>Enter a query that you might put in a search engine such as Google. Our search engine does not know location information or current events, so please try to keep from querying for this type of information.</Text>
+      </QuestionContent>
+      <AnswerSpecification>
+         <FreeTextAnswer>
+            <DefaultText>Sample</DefaultText>
+         </FreeTextAnswer>
+      </AnswerSpecification>
+   </Question>
+</QuestionForm>

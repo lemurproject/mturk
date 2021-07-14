@@ -1,0 +1,73 @@
+<QuestionForm
+	xmlns='http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd'>
+	<Question>
+		<QuestionIdentifier>self_report</QuestionIdentifier>
+		<DisplayName>Q1</DisplayName>
+		<IsRequired>true</IsRequired>
+		<QuestionContent>
+			<Text> Which documents for this sample query would you select? </Text>
+		</QuestionContent>
+		<AnswerSpecification>
+			<SelectionAnswer>
+				<StyleSuggestion>checkbox</StyleSuggestion>
+				<Selections>
+					<Selection>
+						<SelectionIdentifier>doc1</SelectionIdentifier>
+						<Binary>
+							<MimeType>
+								<Type>image</Type>
+								<SubType>jpg</SubType>
+							</MimeType>
+							<DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sampleResult1.jpg</DataURL>
+							<AltText>Sample Query Results 1</AltText>
+						</Binary>
+					</Selection>
+					<Selection>
+						<SelectionIdentifier>doc2</SelectionIdentifier>
+						<Binary>
+							<MimeType>
+								<Type>image</Type>
+								<SubType>jpg</SubType>
+							</MimeType>
+							<DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sampleResult2.jpg</DataURL>
+							<AltText>Sample Query Results 2</AltText>
+						</Binary>
+					</Selection>
+					<Selection>
+						<SelectionIdentifier>doc3</SelectionIdentifier>
+						<Binary>
+							<MimeType>
+								<Type>image</Type>
+								<SubType>jpg</SubType>
+							</MimeType>
+							<DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sampleResult3.jpg</DataURL>
+							<AltText>Sample Query Results 3</AltText>
+						</Binary>
+					</Selection>
+					<Selection>
+						<SelectionIdentifier>doc4</SelectionIdentifier>
+						<Binary>
+							<MimeType>
+								<Type>image</Type>
+								<SubType>jpg</SubType>
+							</MimeType>
+							<DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sampleResult4.jpg</DataURL>
+							<AltText>Sample Query Results 4</AltText>
+						</Binary>
+					</Selection>
+					<Selection>
+						<SelectionIdentifier>doc4</SelectionIdentifier>
+						<Binary>
+							<MimeType>
+								<Type>image</Type>
+								<SubType>jpg</SubType>
+							</MimeType>
+							<DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sampleResult5.jpg</DataURL>
+							<AltText>Sample Query Results 5</AltText>
+						</Binary>
+					</Selection>
+				</Selections>
+			</SelectionAnswer>
+		</AnswerSpecification>
+	</Question>
+</QuestionForm>

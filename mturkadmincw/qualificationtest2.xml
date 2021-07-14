@@ -1,0 +1,58 @@
+<QuestionForm xmlns='http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd'>  
+  <Question>
+      <QuestionIdentifier>self_report</QuestionIdentifier>
+      <DisplayName>Q1</DisplayName>
+      <IsRequired>true</IsRequired>
+      <QuestionContent>
+        <Text> Which documents for this sample query would you select? </Text>
+        <Binary>
+          <MimeType>
+            <Type>image</Type>
+            <SubType>jpg</SubType>
+          </MimeType>
+          <DataURL>http://boston.lti.cs.cmu.edu/cmw2/MTurk_sample1.jpg</DataURL>
+          <AltText>Sample Query Results</AltText>
+        </Binary>
+      </QuestionContent>
+      <AnswerSpecification>
+        <SelectionAnswer>
+          <StyleSuggestion>checkbox</StyleSuggestion>
+          <Selections>
+            <Selection>
+              <SelectionIdentifier>doc1</SelectionIdentifier>
+              <Text> DIY Project Archives Secrets of Home Theater and High Fidelity</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc2</SelectionIdentifier>
+              <Text>  My Home Improvement Tips</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc3</SelectionIdentifier>
+              <Text>  Free Web Directory - Home Do It Yourself</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc4</SelectionIdentifier>
+              <Text>  Design*Sponge diy</Text>
+            </Selection>
+            <Selection>
+              <SelectionIdentifier>doc4</SelectionIdentifier>
+              <Text> DIY: Star Wars Minifig Joule Thief Project The UberReview</Text>
+            </Selection>
+          </Selections>
+        </SelectionAnswer>
+      </AnswerSpecification>
+  </Question>
+  <Question>
+      <QuestionIdentifier>test_query</QuestionIdentifier>
+      <DisplayName>Q2</DisplayName>
+      <IsRequired>true</IsRequired>
+      <QuestionContent>
+         <Text>Enter a query that you might put in a search engine such as Google. Our search engine does not know location information or current events, so please try to keep from querying for this type of information.</Text>
+      </QuestionContent>
+      <AnswerSpecification>
+         <FreeTextAnswer>
+            <DefaultText>Sample</DefaultText>
+         </FreeTextAnswer>
+      </AnswerSpecification>
+   </Question>
+</QuestionForm>
