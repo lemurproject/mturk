@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.Writer;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +91,7 @@ public class GetSubmittedHITs {
 
 			while (scanner.hasNext()) {
 				String hitId = scanner.next();
-				// System.out.println(hitId + " - " + hit.getHITStatus());
+				System.out.println(hitId);
 
 				ListAssignmentsForHITRequest listHITRequest = new ListAssignmentsForHITRequest();
 				listHITRequest.setHITId(hitId);
@@ -108,6 +112,14 @@ public class GetSubmittedHITs {
 
 					if (assignmentStatus.equalsIgnoreCase("Submitted")) {
 						// if (assignmentStatus.equalsIgnoreCase("Approved")) {
+						long startTime = asn.getAcceptTime().getTime();
+						LocalDateTime date = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
+								.toLocalDateTime();
+						DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+						response.setExperimentTimeOfDay(formatter.format(date));
+						response.setExperimentDayOfWeek(date.getDayOfWeek().toString());
+						response.setStartTime(asn.getAcceptTime().getTime());
+						response.setEndTime(asn.getSubmitTime().getTime());
 						double time = (asn.getSubmitTime().getTime() - asn.getAcceptTime().getTime()) / 1000d;
 						response.setTime(time);
 						double minutes = time / 60d;

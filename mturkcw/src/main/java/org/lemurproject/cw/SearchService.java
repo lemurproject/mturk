@@ -3,12 +3,16 @@ package org.lemurproject.cw;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringJoiner;
+import java.util.concurrent.SynchronousQueue;
 
 import javax.annotation.PostConstruct;
 
@@ -29,17 +33,20 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-@Component("searchService")
+@Component
 public class SearchService {
 
 	@Autowired
-	private GlobalProperties searchProps;
+	private CWProperties searchProps;
 
 	private CloudSolrClient solrClient;
 
 	private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
 	private List<String> categories;
+
+	private SynchronousQueue<String> gpuQueue;
+	private Map<String, String> responseMap;
 
 //	private static Socket clientSocket;
 //	private static PrintWriter out;
@@ -76,6 +83,10 @@ public class SearchService {
 		categories.add("Style");
 		categories.add("Technology");
 		categories.add("Travel");
+
+		gpuQueue = new SynchronousQueue<String>();
+		new GPURequestThread().start();
+		responseMap = new HashMap<String, String>();
 	}
 
 	public List<String> getSearchCategories() {
@@ -150,52 +161,248 @@ public class SearchService {
 		return searchResult;
 	}
 
+	public SearchResult qual1Search() throws IOException {
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery("dangers of asbestos");
+
+		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual1results.json")));
+		Gson gson = new Gson();
+		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				}
+			}
+			doc.setTitle(titleText);
+
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			highlightText = String.join(" ", highlightText, "..");
+			doc.setHighlight(highlightText);
+
+		}
+		searchResult.setDocuments(Arrays.asList(docs));
+//		} catch (Exception e) {
+//			System.out.println("No resulsts for query: " + query);
+//		}
+		return searchResult;
+	}
+
+	public SearchResult qual2Search() throws IOException {
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery("civil rights movement");
+
+		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual2results.json")));
+		Gson gson = new Gson();
+		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				}
+			}
+			doc.setTitle(titleText);
+
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			highlightText = String.join(" ", highlightText, "..");
+			doc.setHighlight(highlightText);
+
+		}
+		searchResult.setDocuments(Arrays.asList(docs));
+//		} catch (Exception e) {
+//			System.out.println("No resulsts for query: " + query);
+//		}
+		return searchResult;
+	}
+
+	public SearchResult qual3Search() throws IOException {
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery("hobby stores");
+
+		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual3results.json")));
+		Gson gson = new Gson();
+		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				}
+			}
+			doc.setTitle(titleText);
+
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			highlightText = String.join(" ", highlightText, "..");
+			doc.setHighlight(highlightText);
+
+		}
+		searchResult.setDocuments(Arrays.asList(docs));
+//		} catch (Exception e) {
+//			System.out.println("No resulsts for query: " + query);
+//		}
+		return searchResult;
+	}
+
+	public SearchResult qual4Search() throws IOException {
+		SearchResult searchResult = new SearchResult();
+		searchResult.setQuery("Hiking in Yosemite National Park");
+
+		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual4results.json")));
+		Gson gson = new Gson();
+		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				}
+			}
+			doc.setTitle(titleText);
+
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			highlightText = String.join(" ", highlightText, "..");
+			doc.setHighlight(highlightText);
+
+		}
+		searchResult.setDocuments(Arrays.asList(docs));
+//		} catch (Exception e) {
+//			System.out.println("No resulsts for query: " + query);
+//		}
+		return searchResult;
+	}
+
+	private class GPURequestThread extends Thread {
+		@Override
+		public void run() {
+			while (true) {
+				String queryString = gpuQueue.poll();
+				if (queryString == null) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						System.out.println("Caught interrupted exception");
+						Thread.currentThread().interrupt();
+					}
+				} else {
+					String url = searchProps.getBertUrl();
+					String resp = null;
+					String query = queryString.replace(" ", "%20");
+					HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
+					try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
+						resp = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
+					} catch (Exception e) {
+						System.out.println("Failed");
+					}
+					responseMap.put(queryString, resp);
+				}
+			}
+		}
+	}
+
 	public SearchResult bertSearch(String queryString) throws IOException {
 		SearchResult searchResult = new SearchResult();
 		searchResult.setQuery(queryString);
 
-		String url = "http://boston.lti.cs.cmu.edu/boston-2-29/search/";
-		String resp = null;
-		String query = queryString.replace(" ", "%20");
-		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
-		try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
-			resp = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
-			// System.out.println(resp);
-		} catch (Exception e) {
-			System.out.println("Failed");
+//		String url = searchProps.getBertUrl();
+//		String resp = null;
+//		String query = queryString.replace(" ", "%20");
+//		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
+//		try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
+//			resp = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
+//			// System.out.println(resp);
+//		} catch (Exception e) {
+//			System.out.println("Failed");
+//		}
+
+		// Poll response map
+		long startTime = System.currentTimeMillis();
+		try {
+			gpuQueue.put(queryString);
+			Thread.sleep(1000);
+			while (responseMap.get(queryString) == null) {
+				Thread.sleep(300);
+			}
+		} catch (InterruptedException e) {
+			System.out.println("Main thread sleep failed");
 		}
+		String resp = responseMap.get(queryString);
+		long endTime = System.currentTimeMillis();
+		long delta = endTime - startTime;
+		System.out.println("Query Time: " + delta);
 
 		Gson gson = new Gson();
-		try {
-			DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
-			for (DocumentResult doc : docs) {
-				String titleText = doc.getTitle();
-				titleText = titleText.replaceAll("<b>", "");
-				titleText = titleText.replaceAll("</b>", "");
-				titleText = titleText.replaceAll("em>", "b>");
-				titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+		// try {
+		DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
+		for (DocumentResult doc : docs) {
+			String titleText = doc.getTitle();
+			titleText = titleText.replaceAll("<b>", "");
+			titleText = titleText.replaceAll("</b>", "");
+			titleText = titleText.replaceAll("em>", "b>");
+			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
 
-				if (titleText.length() > 100) {
-					int endIndex = titleText.indexOf(" ", 100);
-					if (endIndex > 100) {
-						titleText = String.join(" ", titleText.substring(0, endIndex), "...");
-					}
+			if (titleText.length() > 100) {
+				int endIndex = titleText.indexOf(" ", 100);
+				if (endIndex > 100) {
+					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
 				}
-				doc.setTitle(titleText);
-
-				String highlightText = doc.getHighlight();
-				highlightText = highlightText.replaceAll("<b>", "");
-				highlightText = highlightText.replaceAll("</b>", "");
-				highlightText = highlightText.replaceAll("em>", "b>");
-				highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-				highlightText = String.join(" ", highlightText, "..");
-				doc.setHighlight(highlightText);
-
 			}
-			searchResult.setDocuments(Arrays.asList(docs));
-		} catch (Exception e) {
-			System.out.println("No resulsts for query: " + query);
+			doc.setTitle(titleText);
+
+			String highlightText = doc.getHighlight();
+			highlightText = highlightText.replaceAll("<b>", "");
+			highlightText = highlightText.replaceAll("</b>", "");
+			highlightText = highlightText.replaceAll("em>", "b>");
+			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			highlightText = String.join(" ", highlightText, "..");
+			doc.setHighlight(highlightText);
+
 		}
+		searchResult.setDocuments(Arrays.asList(docs));
+//		} catch (Exception e) {
+//			System.out.println("No resulsts for query: " + query);
+//		}
 		return searchResult;
 	}
 

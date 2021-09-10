@@ -36,6 +36,7 @@
 
 .titlestyle {
 	font-size: 125%;
+	color: #285cb0;
 }
 
 .urlstyle {
@@ -65,18 +66,57 @@
 		method="post" modelAttribute="searchResult">
 		<form:input path="assignmentId" type="hidden"
 			value="${searchResult.assignmentId}" />
+			
+		<form:input path="prevQuery" type="hidden"
+			value="${searchResult.prevQuery}" />
+		<form:input path="prevDescription" type="hidden"
+			value="${searchResult.prevDescription}" />
+		<form:input path="prevCategory" type="hidden"
+			value="${searchResult.prevCategory}" />
+		<form:input path="prevDoc1id" type="hidden" value="${searchResult.prevDoc1id}" />
+		<form:input path="prevDoc1selection" type="hidden" value="${searchResult.prevDoc1selection}" />
+		<form:input path="prevDoc2id" type="hidden" value="${searchResult.prevDoc2id}" />
+		<form:input path="prevDoc2selection" type="hidden" value="${searchResult.prevDoc2selection}" />
+		<form:input path="prevDoc3id" type="hidden" value="${searchResult.prevDoc3id}" />
+		<form:input path="prevDoc3selection" type="hidden" value="${searchResult.prevDoc3selection}" />
+		<form:input path="prevDoc4id" type="hidden" value="${searchResult.prevDoc4id}" />
+		<form:input path="prevDoc4selection" type="hidden" value="${searchResult.prevDoc4selection}" />
+		<form:input path="prevDoc5id" type="hidden" value="${searchResult.prevDoc5id}" />
+		<form:input path="prevDoc5selection" type="hidden" value="${searchResult.prevDoc5selection}" />
+		<form:input path="prevDoc6id" type="hidden" value="${searchResult.prevDoc6id}" />
+		<form:input path="prevDoc6selection" type="hidden" value="${searchResult.prevDoc6selection}" />
+		<form:input path="prevDoc7id" type="hidden" value="${searchResult.prevDoc7id}" />
+		<form:input path="prevDoc7selection" type="hidden" value="${searchResult.prevDoc7selection}" />
+		<form:input path="prevDoc8id" type="hidden" value="${searchResult.prevDoc8id}" />
+		<form:input path="prevDoc8selection" type="hidden" value="${searchResult.prevDoc8selection}" />
+		<form:input path="prevDoc9id" type="hidden" value="${searchResult.prevDoc9id}" />
+		<form:input path="prevDoc9selection" type="hidden" value="${searchResult.prevDoc9selection}" />
+		<form:input path="prevDoc10id" type="hidden" value="${searchResult.prevDoc10id}" />
+		<form:input path="prevDoc10selection" type="hidden" value="${searchResult.prevDoc10selection}" />
+		<form:input path="prevDoc11id" type="hidden" value="${searchResult.prevDoc11id}" />
+		<form:input path="prevDoc11selection" type="hidden" value="${searchResult.prevDoc11selection}" />
+		<form:input path="prevDoc12id" type="hidden" value="${searchResult.prevDoc12id}" />
+		<form:input path="prevDoc12selection" type="hidden" value="${searchResult.prevDoc12selection}" />
+		<form:input path="prevDoc13id" type="hidden" value="${searchResult.prevDoc13id}" />
+		<form:input path="prevDoc13selection" type="hidden" value="${searchResult.prevDoc13selection}" />
+			
+		<form:input path="assignmentId" type="hidden"
+			value="${searchResult.assignmentId}" />
 		<form:input path="query" type="hidden" value="${searchResult.query}" />
 		<form:input path="description" type="hidden"
 			value="${searchResult.description}" />
 		<form:input path="category" type="hidden"
 			value="${searchResult.category}" />
+		<form:input path="queryTime" type="hidden"
+			value="${searchResult.queryTime}" />
+			<form:input path="inputTime" type="hidden"
+			value="${searchResult.inputTime}" />
 		<div align="left">
 			<label>Searched for: </label>&nbsp;&nbsp;
 			<form:input path="query" size="100" disabled="true" />
 		</div>
-		<div class="instructionstyle">Please note that these documents are from the year 2009.  
-		Place a check mark next to every document that you think is worth examining.  You do not need to open
-		the links (many do not work any more), but check the documents that you feel you would open.<br/>
+		<div class="instructionstyle"> 
+		Place a check mark next to every result that you would open. <br/>
 		</div>
 		<hr />
 		<table class="tablestyle">
@@ -94,11 +134,7 @@
 							path="documents[${tagStatus.index}].selected"
 							id="${document.docId}" name="${document.docId}" value="selected" /></td>
 					<td class="cellstyle">
-						<div>
-							<a class="titlestyle" target="_blank" href="${document.url}">${document.title}</a>
-							<!--<a class="titlestyle" href="./document?docid=${document.docId}">${document.title}</a>
-							 <a class="titlestyle" href="./documentFrame?docurl=${document.url}">${document.title}</a> -->
-						</div>
+						<div class="titlestyle">${document.title}</div>
 					</td>
 				</tr>
 				<tr>

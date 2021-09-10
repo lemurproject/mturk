@@ -5,6 +5,10 @@ public class QueryResponseObject {
 	private String mturkAssessorId;
 	private String HITid;
 	private String AssignmentId;
+	private String experimentTimeOfDay;
+	private String experimentDayOfWeek;
+	private long startTime;
+	private long endTime;
 	private double time;
 	private double minutes;
 	private double inputTime;
@@ -258,19 +262,20 @@ public class QueryResponseObject {
 	}
 
 	public String getCsvHeaders() {
-		String headers = String.join(",", "HITid", "AssignmentId", "WorkerId", "Time", "Minutes", "Input Time (s)",
-				"Query Time (s)", "Query", "Description", "Category", "doc1id", "doc1selected", "doc2id",
-				"doc2selected", "doc3id", "doc3selected", "doc4id", "doc4selected", "doc5id", "doc5selected", "doc6id",
-				"doc6selected", "doc7id", "doc7selected", "doc8id", "doc8selected", "doc9id", "doc9selected", "doc10id",
-				"doc10selected", "doc11id", "doc11selected", "doc12id", "doc12selected", "doc13id", "doc13selected",
-				"Num Relevant Selected", "Num NR Selected");
+		String headers = String.join(",", "HITid", "AssignmentId", "WorkerId", "Time of Day", "Day of Week",
+				"Start Time", "End Time", "Time", "Minutes", "Input Time (s)", "Query Time (s)", "Query", "Description",
+				"Category", "doc1id", "doc1selected", "doc2id", "doc2selected", "doc3id", "doc3selected", "doc4id",
+				"doc4selected", "doc5id", "doc5selected", "doc6id", "doc6selected", "doc7id", "doc7selected", "doc8id",
+				"doc8selected", "doc9id", "doc9selected", "doc10id", "doc10selected", "doc11id", "doc11selected",
+				"doc12id", "doc12selected", "doc13id", "doc13selected", "Num Relevant Selected", "Num NR Selected");
 		return String.join("", headers, "\n");
 	}
 
 	public String getCsvValues() {
-		String values = String.join(",", HITid, AssignmentId, mturkAssessorId, String.valueOf(time),
-				String.valueOf(minutes), String.valueOf(inputTime), String.valueOf(queryTime), query, description,
-				category, doc1id, String.valueOf(doc1selected), doc2id, String.valueOf(doc2selected), doc3id,
+		String values = String.join(",", HITid, AssignmentId, mturkAssessorId, experimentTimeOfDay, experimentDayOfWeek,
+				String.valueOf(startTime), String.valueOf(endTime), String.valueOf(time), String.valueOf(minutes),
+				String.valueOf(inputTime), String.valueOf(queryTime), query, description, category, doc1id,
+				String.valueOf(doc1selected), doc2id, String.valueOf(doc2selected), doc3id,
 				String.valueOf(doc3selected), doc4id, String.valueOf(doc4selected), doc5id,
 				String.valueOf(doc5selected), doc6id, String.valueOf(doc6selected), doc7id,
 				String.valueOf(doc7selected), doc8id, String.valueOf(doc8selected), doc9id,
@@ -366,5 +371,37 @@ public class QueryResponseObject {
 
 	public void setDoc13selected(boolean doc13selected) {
 		this.doc13selected = doc13selected;
+	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	public long getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getExperimentTimeOfDay() {
+		return experimentTimeOfDay;
+	}
+
+	public void setExperimentTimeOfDay(String experimentTimeOfDay) {
+		this.experimentTimeOfDay = experimentTimeOfDay;
+	}
+
+	public String getExperimentDayOfWeek() {
+		return experimentDayOfWeek;
+	}
+
+	public void setExperimentDayOfWeek(String experimentDayOfWeek) {
+		this.experimentDayOfWeek = experimentDayOfWeek;
 	}
 }

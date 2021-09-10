@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class CreateMTurkHits {
 		testRequirement.setQualificationTypeId(properties.getQualificationType());
 		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
 		List<Integer> integerValues = new ArrayList<Integer>();
-		integerValues.add(Integer.valueOf(1));
+		integerValues.add(Integer.valueOf(4));
 		testRequirement.setIntegerValues(integerValues);
 		qualifications.add(testRequirement);
 
@@ -58,9 +60,13 @@ public class CreateMTurkHits {
 //		testRequirement2.setIntegerValues(integerValues2);
 //		qualifications.add(testRequirement2);
 
+		LocalDateTime date = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
 		Writer hitDataWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(properties.getHitFilename()), "UTF8"));
 		hitDataWriter.write("hitId\n");
+		System.out.println(formatter.format(date));
 
 		String url = "";
 		for (int i = 0; i < 20; i++) {
@@ -95,6 +101,7 @@ public class CreateMTurkHits {
 			System.out.println(String.join("", result.getHIT().getHITId(), "\n"));
 		}
 		System.out.println(String.join(": ", "url: ", url));
+		System.out.println(formatter.format(date));
 
 		hitDataWriter.close();
 

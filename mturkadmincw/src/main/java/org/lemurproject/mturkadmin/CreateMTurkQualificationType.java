@@ -25,13 +25,13 @@ public class CreateMTurkQualificationType {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
 		CreateQualificationTypeRequest createQualificationType = new CreateQualificationTypeRequest();
-		createQualificationType.setName("2 Short Civil Rights Qualification");
+		createQualificationType.setName("Yosemite Qual: 9 doc, Score>4");
 		createQualificationType.setKeywords("document, relevance");
 		createQualificationType.setDescription("How relevant is the list of documents the given search?");
 		createQualificationType.setQualificationTypeStatus("Active");
-		String questionSample = new String(Files.readAllBytes(Paths.get("qualification2_short.xml")));
+		String questionSample = new String(Files.readAllBytes(Paths.get("qualification4.xml")));
 		createQualificationType.setTest(questionSample);
-		String answerSample = new String(Files.readAllBytes(Paths.get("qualification2_short_answerkey2.xml")));
+		String answerSample = new String(Files.readAllBytes(Paths.get("qualification4_answerkey.xml")));
 		createQualificationType.setAnswerKey(answerSample);
 		createQualificationType.setTestDurationInSeconds(1200L);
 
