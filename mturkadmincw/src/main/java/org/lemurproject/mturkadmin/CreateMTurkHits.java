@@ -48,7 +48,7 @@ public class CreateMTurkHits {
 		testRequirement.setQualificationTypeId(properties.getQualificationType());
 		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
 		List<Integer> integerValues = new ArrayList<Integer>();
-		integerValues.add(Integer.valueOf(4));
+		integerValues.add(Integer.valueOf(2));
 		testRequirement.setIntegerValues(integerValues);
 		qualifications.add(testRequirement);
 
@@ -77,12 +77,12 @@ public class CreateMTurkHits {
 			request.setQuestion(questionSample);
 
 			request.setMaxAssignments(5);
-			long lifetime = 60 * 60L * 24 * 7;
+			long lifetime = 60 * 60L * 24;
 			request.setLifetimeInSeconds(lifetime);
 			long duration = 60 * 20L;
 			request.setAssignmentDurationInSeconds(duration);
 			// Reward is a USD dollar amount - USD$0.20 in the example below
-			request.setReward("0.50");
+			request.setReward("0.40");
 			request.setTitle("Enter a search topic and select the best results (~2 minutes)");
 			request.setKeywords("search, document, relevance");
 			request.setDescription("After performing a search, how relevant is the list of results to your search?");

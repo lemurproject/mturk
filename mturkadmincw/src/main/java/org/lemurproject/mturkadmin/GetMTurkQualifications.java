@@ -33,7 +33,7 @@ public class GetMTurkQualifications {
 		for (Qualification qualif : workers.getQualifications()) {
 			System.out.println(qualif.getIntegerValue());
 			totalNum++;
-			if (qualif.getIntegerValue().intValue() >= 3) {
+			if (qualif.getIntegerValue().intValue() >= 2) {
 				numQual++;
 			}
 			if (qualif.getIntegerValue().intValue() >= 0) {
@@ -47,7 +47,7 @@ public class GetMTurkQualifications {
 			for (Qualification qualif : workers2.getQualifications()) {
 				System.out.println(qualif.getIntegerValue());
 				totalNum++;
-				if (qualif.getIntegerValue().intValue() >= 3) {
+				if (qualif.getIntegerValue().intValue() >= 2) {
 					numQual++;
 				}
 				if (qualif.getIntegerValue().intValue() >= 0) {

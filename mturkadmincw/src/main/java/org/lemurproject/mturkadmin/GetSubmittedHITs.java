@@ -148,7 +148,7 @@ public class GetSubmittedHITs {
 									NRdoc = false;
 								}
 								String freeText = String.join("", "\" ", freeTextInput, "\"");
-								System.out.println(questionIdentifier + ": " + freeText);
+								// System.out.println(questionIdentifier + ": " + freeText);
 
 								if (questionIdentifier.equalsIgnoreCase("query")) {
 									response.setQuery(freeText);
