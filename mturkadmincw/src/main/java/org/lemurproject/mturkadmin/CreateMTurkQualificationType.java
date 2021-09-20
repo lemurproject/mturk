@@ -25,7 +25,7 @@ public class CreateMTurkQualificationType {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
 		CreateQualificationTypeRequest createQualificationType = new CreateQualificationTypeRequest();
-		createQualificationType.setName("Wood Project Qual: 9 doc, Score>=4, price .40, time 4pm");
+		createQualificationType.setName("Wood working Qual: 9 doc, Score>=5, price .40, time 2pm");
 		createQualificationType.setKeywords("document, relevance");
 		createQualificationType.setDescription("How relevant is the list of documents the given search?");
 		createQualificationType.setQualificationTypeStatus("Active");

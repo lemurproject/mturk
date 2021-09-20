@@ -48,7 +48,7 @@ public class CreateMTurkHits {
 		testRequirement.setQualificationTypeId(properties.getQualificationType());
 		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
 		List<Integer> integerValues = new ArrayList<Integer>();
-		integerValues.add(Integer.valueOf(2));
+		integerValues.add(Integer.valueOf(5));
 		testRequirement.setIntegerValues(integerValues);
 		qualifications.add(testRequirement);
 
@@ -69,15 +69,15 @@ public class CreateMTurkHits {
 		System.out.println(formatter.format(date));
 
 		String url = "";
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 10; i++) {
 
 			CreateHITRequest request = new CreateHITRequest();
 			// Read the question XML into a String
 			String questionSample = new String(Files.readAllBytes(Paths.get(properties.getQuestionFilename())));
 			request.setQuestion(questionSample);
 
-			request.setMaxAssignments(5);
-			long lifetime = 60 * 60L * 24;
+			request.setMaxAssignments(10);
+			long lifetime = 60 * 60L * 4;
 			request.setLifetimeInSeconds(lifetime);
 			long duration = 60 * 20L;
 			request.setAssignmentDurationInSeconds(duration);
