@@ -70,12 +70,13 @@ public class SearchService {
 		categories.add("Entertainment");
 		categories.add("Food & Drink");
 		categories.add("Health & Wellness");
+		categories.add("History");
 		categories.add("Home");
+		categories.add("Nature");
 		categories.add("Parenting");
 		categories.add("Pets");
 		categories.add("Politics");
 		categories.add("Recreation");
-		categories.add("Relationships");
 		categories.add("Science");
 		categories.add("Shopping");
 		categories.add("Spirituality");
@@ -384,7 +385,7 @@ public class SearchService {
 
 			if (titleText.length() > 100) {
 				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
+				if (endIndex >= 100) {
 					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
 				}
 			}

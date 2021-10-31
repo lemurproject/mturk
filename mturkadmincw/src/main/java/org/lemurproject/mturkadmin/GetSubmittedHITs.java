@@ -24,9 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -75,11 +73,6 @@ public class GetSubmittedHITs {
 		Writer hitDataWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(properties.getJudgedDocumentsCsvName()), "UTF8"));
 		hitDataWriter.write(testObject.getCsvHeaders());
-
-//		Writer userDataWriter = new BufferedWriter(
-//				new OutputStreamWriter(new FileOutputStream("MTurk_user_data.csv"), "UTF8"));
-//		userDataWriter.write(String.join(",", "workerId", "num queries", "avg wrong", "avg time"));
-//		userDataWriter.write("\n");
 
 		List<QueryResponseObject> responses = new ArrayList<QueryResponseObject>();
 		String[] fileNames = properties.getHitFilename().split(",");
@@ -294,56 +287,6 @@ public class GetSubmittedHITs {
 			}
 		}
 		hitDataWriter.close();
-
-//		Map<String, List<QueryResponseObject>> workerResponseMap = new HashMap<String, List<QueryResponseObject>>();
-//		for (QueryResponseObject response : responses) {
-//			workerResponseMap.putIfAbsent(response.getMturkAssessorId(), new ArrayList<QueryResponseObject>());
-//			workerResponseMap.get(response.getMturkAssessorId()).add(response);
-//		}
-//
-//		for (String worker : workerResponseMap.keySet()) {
-//			List<QueryResponseObject> workerResponses = workerResponseMap.get(worker);
-//			int numQueries = workerResponses.size();
-//			double totalTime = 0d;
-//			double numWrong = 0d;
-//			for (QueryResponseObject workerResponse : workerResponses) {
-//				totalTime += workerResponse.getTime();
-//				numWrong += Double.valueOf(workerResponse.getNumNRselected()).doubleValue();
-//			}
-//			double avgTime = totalTime / (double) numQueries;
-//			double avgWrong = numWrong / (double) numQueries;
-//			userDataWriter.write(String.join(",", worker, String.valueOf(numQueries), String.valueOf(avgWrong),
-//					String.valueOf(avgTime)));
-//			userDataWriter.write("\n");
-//		}
-//		userDataWriter.close();
-	}
-
-	private void writeCsv(List<JudgedDocumentObject> judgedDocs) throws IOException {
-		Writer csvWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(properties.getJudgedDocumentsCsvName()), "UTF8"));
-		Writer dupsWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream("duplicates_32.csv"), "UTF8"));
-		if (judgedDocs != null && judgedDocs.size() > 0) {
-			csvWriter.write(judgedDocs.get(0).getCsvHeaders());
-			Map<String, List<String>> docIds2Scores = new HashMap<String, List<String>>();
-			for (JudgedDocumentObject judgedDoc : judgedDocs) {
-				csvWriter.write(judgedDoc.toString());
-				docIds2Scores.putIfAbsent(judgedDoc.getDocId(), new ArrayList<String>());
-				docIds2Scores.get(judgedDoc.getDocId()).add(judgedDoc.getWorkerScore());
-			}
-			for (String docId : docIds2Scores.keySet()) {
-				List<String> workerScores = docIds2Scores.get(docId);
-				if (workerScores.size() > 1) {
-					dupsWriter.write(docId);
-					dupsWriter.write(",");
-					dupsWriter.write(String.join(",", workerScores));
-					dupsWriter.write("\n");
-				}
-			}
-		}
-		csvWriter.close();
-		dupsWriter.close();
 	}
 
 }

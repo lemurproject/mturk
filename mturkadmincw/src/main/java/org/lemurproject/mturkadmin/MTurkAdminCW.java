@@ -30,9 +30,6 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private GetMTurkQualifications getQualResults;
 
 	@Autowired
-	private AcceptMTurkQualificationResults acceptQualResults;
-
-	@Autowired
 	private MTurkProperties properties;
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -54,8 +51,6 @@ public class MTurkAdminCW implements CommandLineRunner {
 			createQualType.createQualification();
 		} else if (properties.getFunction().equalsIgnoreCase("getqual")) {
 			getQualResults.getQualifications();
-		} else if (properties.getFunction().equalsIgnoreCase("acceptqual")) {
-			acceptQualResults.acceptQualificationRequests();
 		}
 	}
 

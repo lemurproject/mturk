@@ -19,7 +19,6 @@ import com.amazonaws.services.mturk.AmazonMTurk;
 import com.amazonaws.services.mturk.model.Comparator;
 import com.amazonaws.services.mturk.model.CreateHITRequest;
 import com.amazonaws.services.mturk.model.CreateHITResult;
-import com.amazonaws.services.mturk.model.Locale;
 import com.amazonaws.services.mturk.model.QualificationRequirement;
 
 @Component
@@ -36,29 +35,25 @@ public class CreateMTurkHits {
 
 		List<QualificationRequirement> qualifications = new ArrayList<QualificationRequirement>();
 
-		QualificationRequirement localeRequirement = new QualificationRequirement();
-		localeRequirement.setQualificationTypeId("00000000000000000071");
-		localeRequirement.setComparator(Comparator.In);
-		List<Locale> localeValues = new ArrayList<>();
-		localeValues.add(new Locale().withCountry("US"));
-		localeRequirement.setLocaleValues(localeValues);
-		qualifications.add(localeRequirement);
+//		QualificationRequirement localeRequirement = new QualificationRequirement();
+//		localeRequirement.setQualificationTypeId("00000000000000000071");
+//		localeRequirement.setComparator(Comparator.In);
+//		List<Locale> localeValues = new ArrayList<>();
+//		localeValues.add(new Locale().withCountry("US"));
+//		localeValues.add(new Locale().withCountry("CA"));
+//		localeValues.add(new Locale().withCountry("GB"));
+//		localeValues.add(new Locale().withCountry("AU"));
+////		localeValues.add(new Locale().withCountry("IN"));
+//		localeRequirement.setLocaleValues(localeValues);
+//		qualifications.add(localeRequirement);
 
 		QualificationRequirement testRequirement = new QualificationRequirement();
 		testRequirement.setQualificationTypeId(properties.getQualificationType());
 		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
 		List<Integer> integerValues = new ArrayList<Integer>();
-		integerValues.add(Integer.valueOf(5));
+		integerValues.add(Integer.valueOf(properties.getQualificationScore()));
 		testRequirement.setIntegerValues(integerValues);
 		qualifications.add(testRequirement);
-
-//		QualificationRequirement testRequirement2 = new QualificationRequirement();
-//		testRequirement.setQualificationTypeId("33DXTGLH9KH8VXV57V2QXGRDPWIP3U");
-//		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
-//		List<Integer> integerValues2 = new ArrayList<Integer>();
-//		integerValues2.add(Integer.valueOf(27));
-//		testRequirement2.setIntegerValues(integerValues2);
-//		qualifications.add(testRequirement2);
 
 		LocalDateTime date = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -77,12 +72,12 @@ public class CreateMTurkHits {
 			request.setQuestion(questionSample);
 
 			request.setMaxAssignments(10);
-			long lifetime = 60 * 60L * 4;
+			long lifetime = 60 * 60L * 8;
 			request.setLifetimeInSeconds(lifetime);
 			long duration = 60 * 20L;
 			request.setAssignmentDurationInSeconds(duration);
 			// Reward is a USD dollar amount - USD$0.20 in the example below
-			request.setReward("0.40");
+			request.setReward(properties.getHitPrice());
 			request.setTitle("Enter a search topic and select the best results (~2 minutes)");
 			request.setKeywords("search, document, relevance");
 			request.setDescription("After performing a search, how relevant is the list of results to your search?");

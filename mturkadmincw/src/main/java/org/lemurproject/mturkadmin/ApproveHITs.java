@@ -19,6 +19,7 @@ import com.amazonaws.services.mturk.model.Assignment;
 import com.amazonaws.services.mturk.model.AssignmentStatus;
 import com.amazonaws.services.mturk.model.ListAssignmentsForHITRequest;
 import com.amazonaws.services.mturk.model.ListAssignmentsForHITResult;
+import com.amazonaws.services.mturk.model.RejectAssignmentRequest;
 
 @Component
 public class ApproveHITs {
@@ -55,12 +56,21 @@ public class ApproveHITs {
 
 			for (Assignment asn : assignmentList) {
 				// Approve the assignment
-				ApproveAssignmentRequest approveRequest = new ApproveAssignmentRequest();
-				approveRequest.setAssignmentId(asn.getAssignmentId());
-				approveRequest.setRequesterFeedback("Good work, thank you!");
-				approveRequest.setOverrideRejection(false);
-				client.approveAssignment(approveRequest);
-				System.out.println("Assignment has been approved: " + asn.getAssignmentId());
+				if (asn.getWorkerId().equalsIgnoreCase("A2UIGDOLX5RV95")) {
+					RejectAssignmentRequest rejectRequest = new RejectAssignmentRequest();
+					rejectRequest.setAssignmentId(asn.getAssignmentId());
+					rejectRequest.setRequesterFeedback(
+							"Rejected, the same query was entered multiple times and matched the qualifying query.");
+					client.rejectAssignment(rejectRequest);
+					System.out.println("Assignment has been rejected: " + asn.getAssignmentId());
+				} else {
+					ApproveAssignmentRequest approveRequest = new ApproveAssignmentRequest();
+					approveRequest.setAssignmentId(asn.getAssignmentId());
+					approveRequest.setRequesterFeedback("Good work, thank you!");
+					approveRequest.setOverrideRejection(false);
+					client.approveAssignment(approveRequest);
+					System.out.println("Assignment has been approved: " + asn.getAssignmentId());
+				}
 			}
 		}
 		scanner.close();
