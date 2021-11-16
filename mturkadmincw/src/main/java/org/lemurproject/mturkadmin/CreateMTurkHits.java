@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ import com.amazonaws.services.mturk.model.QualificationRequirement;
 public class CreateMTurkHits {
 
 	@Autowired
-	private MTurkProperties properties;
-
-	@Autowired
 	private MTurkClientHelper clientHelper;
 
-	public void createHits() throws IOException {
+	@Autowired
+	private MTurkFilenameHelper filenameHelper;
+
+	public void createHits(MTurkProperties properties) throws IOException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
 		List<QualificationRequirement> qualifications = new ArrayList<QualificationRequirement>();
@@ -47,6 +48,12 @@ public class CreateMTurkHits {
 //		localeRequirement.setLocaleValues(localeValues);
 //		qualifications.add(localeRequirement);
 
+		QualificationRequirement approvalRateRequirement = new QualificationRequirement();
+		approvalRateRequirement.setQualificationTypeId("000000000000000000L0");
+		approvalRateRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
+		approvalRateRequirement.setIntegerValues(Collections.singletonList(Integer.valueOf(90)));
+		qualifications.add(approvalRateRequirement);
+
 		QualificationRequirement testRequirement = new QualificationRequirement();
 		testRequirement.setQualificationTypeId(properties.getQualificationType());
 		testRequirement.setComparator(Comparator.GreaterThanOrEqualTo);
@@ -58,21 +65,24 @@ public class CreateMTurkHits {
 		LocalDateTime date = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-		Writer hitDataWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(properties.getHitFilename()), "UTF8"));
-		hitDataWriter.write("hitId\n");
+		String hitFilename = filenameHelper.getHitFilename();
+		Writer hitDataWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(hitFilename), "UTF8"));
+		// hitDataWriter.write("hitId\n");
 		System.out.println(formatter.format(date));
 
 		String url = "";
-		for (int i = 0; i < 10; i++) {
+		int numHits = Integer.valueOf(properties.getHitNumber()).intValue();
+		int numAssignments = Integer.valueOf(properties.getHitAssignments()).intValue();
+		for (int i = 0; i < numHits; i++) {
 
 			CreateHITRequest request = new CreateHITRequest();
 			// Read the question XML into a String
 			String questionSample = new String(Files.readAllBytes(Paths.get(properties.getQuestionFilename())));
 			request.setQuestion(questionSample);
 
-			request.setMaxAssignments(10);
-			long lifetime = 60 * 60L * 8;
+			request.setMaxAssignments(numAssignments);
+			int hitHours = Integer.valueOf(properties.getHitLifetimeHours()).intValue();
+			long lifetime = 60 * 60L * hitHours;
 			request.setLifetimeInSeconds(lifetime);
 			long duration = 60 * 20L;
 			request.setAssignmentDurationInSeconds(duration);
@@ -92,8 +102,10 @@ public class CreateMTurkHits {
 				url = String.join("", "https://worker.mturk.com/mturk/preview?groupId=",
 						result.getHIT().getHITTypeId());
 			}
-			hitDataWriter.write(String.join("", result.getHIT().getHITId(), "\n"));
-			System.out.println(String.join("", result.getHIT().getHITId(), "\n"));
+			date = LocalDateTime.now();
+			hitDataWriter.write(String.join("", result.getHIT().getHITId(), ",", formatter.format(date), ",",
+					properties.getQualificationType(), "\n"));
+			System.out.println(String.join("", "HIT Id: ", result.getHIT().getHITId(), "\n"));
 		}
 		System.out.println(String.join(": ", "url: ", url));
 		System.out.println(formatter.format(date));

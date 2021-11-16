@@ -261,30 +261,6 @@ public class QueryResponseObject {
 		this.time = time;
 	}
 
-	public String getCsvHeaders() {
-		String headers = String.join(",", "HITid", "AssignmentId", "WorkerId", "Time of Day", "Day of Week",
-				"Start Time", "End Time", "Time", "Minutes", "Input Time (s)", "Query Time (s)", "Query", "Description",
-				"Category", "doc1id", "doc1selected", "doc2id", "doc2selected", "doc3id", "doc3selected", "doc4id",
-				"doc4selected", "doc5id", "doc5selected", "doc6id", "doc6selected", "doc7id", "doc7selected", "doc8id",
-				"doc8selected", "doc9id", "doc9selected", "doc10id", "doc10selected", "doc11id", "doc11selected",
-				"doc12id", "doc12selected", "doc13id", "doc13selected", "Num Relevant Selected", "Num NR Selected");
-		return String.join("", headers, "\n");
-	}
-
-	public String getCsvValues() {
-		String values = String.join(",", HITid, AssignmentId, mturkAssessorId, experimentTimeOfDay, experimentDayOfWeek,
-				String.valueOf(startTime), String.valueOf(endTime), String.valueOf(time), String.valueOf(minutes),
-				String.valueOf(inputTime), String.valueOf(queryTime), query, description, category, doc1id,
-				String.valueOf(doc1selected), doc2id, String.valueOf(doc2selected), doc3id,
-				String.valueOf(doc3selected), doc4id, String.valueOf(doc4selected), doc5id,
-				String.valueOf(doc5selected), doc6id, String.valueOf(doc6selected), doc7id,
-				String.valueOf(doc7selected), doc8id, String.valueOf(doc8selected), doc9id,
-				String.valueOf(doc9selected), doc10id, String.valueOf(doc10selected), doc11id,
-				String.valueOf(doc11selected), doc12id, String.valueOf(doc12selected), doc13id,
-				String.valueOf(doc13selected), numRelevantSelected, numNRselected);
-		return String.join("", values, "\n");
-	}
-
 	public String getDoc11id() {
 		return doc11id;
 	}
@@ -403,5 +379,41 @@ public class QueryResponseObject {
 
 	public void setExperimentDayOfWeek(String experimentDayOfWeek) {
 		this.experimentDayOfWeek = experimentDayOfWeek;
+	}
+
+	public String getCsvHeaders() {
+		String headers = String.join(",", "HITid", "AssignmentId", "WorkerId", "Time of Day", "Day of Week",
+				"Start Time", "End Time", "Time", "Minutes", "Input Time (s)", "Query Time (s)", "Query", "Category",
+				"doc1id", "doc1selected", "doc2id", "doc2selected", "doc3id", "doc3selected", "doc4id", "doc4selected",
+				"doc5id", "doc5selected", "doc6id", "doc6selected", "doc7id", "doc7selected", "doc8id", "doc8selected",
+				"doc9id", "doc9selected", "doc10id", "doc10selected", "doc11id", "doc11selected", "doc12id",
+				"doc12selected", "doc13id", "doc13selected", "Num Relevant Selected", "Num NR Selected");
+		return String.join("", headers, "\n");
+	}
+
+	public String getCsvValues() {
+		String values = String.join(",", HITid, AssignmentId, mturkAssessorId, experimentTimeOfDay, experimentDayOfWeek,
+				String.valueOf(startTime), String.valueOf(endTime), String.valueOf(time), String.valueOf(minutes),
+				String.valueOf(inputTime), String.valueOf(queryTime), query, category, doc1id,
+				String.valueOf(doc1selected), doc2id, String.valueOf(doc2selected), doc3id,
+				String.valueOf(doc3selected), doc4id, String.valueOf(doc4selected), doc5id,
+				String.valueOf(doc5selected), doc6id, String.valueOf(doc6selected), doc7id,
+				String.valueOf(doc7selected), doc8id, String.valueOf(doc8selected), doc9id,
+				String.valueOf(doc9selected), doc10id, String.valueOf(doc10selected), doc11id,
+				String.valueOf(doc11selected), doc12id, String.valueOf(doc12selected), doc13id,
+				String.valueOf(doc13selected), numRelevantSelected, numNRselected);
+		return String.join("", values, "\n");
+	}
+
+	public String getCsvHeadersShort() {
+		String headers = String.join(",", "HITid", "AssignmentId", "WorkerId", "Category", "Query", "Num Selected",
+				"Num NR Selected", "Reject");
+		return String.join("", headers, "\n");
+	}
+
+	public String getCsvValuesShort() {
+		String values = String.join(",", HITid, AssignmentId, mturkAssessorId, category, query, numRelevantSelected,
+				numNRselected, "a");
+		return String.join("", values, "\n");
 	}
 }

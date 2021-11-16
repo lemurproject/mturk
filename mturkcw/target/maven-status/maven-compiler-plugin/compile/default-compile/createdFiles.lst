@@ -1,9 +1,0 @@
-org\lemurproject\cw\SearchResult.class
-org\lemurproject\cw\BertResult.class
-org\lemurproject\cw\DocumentResult.class
-org\lemurproject\cw\SearchService.class
-org\lemurproject\cw\CWApplication.class
-org\lemurproject\cw\SearchController.class
-org\lemurproject\cw\SearchService$GPURequestThread.class
-org\lemurproject\cw\SearchObject.class
-org\lemurproject\cw\CWProperties.class

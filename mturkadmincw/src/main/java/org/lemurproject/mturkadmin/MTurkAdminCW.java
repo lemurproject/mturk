@@ -21,13 +21,22 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private ApproveHITs approveHITs;
 
 	@Autowired
+	private ApproveAndRejectHITs approveAndRejectHITs;
+
+	@Autowired
 	private DeleteHITsByQualification deleteHITsByQualification;
+
+	@Autowired
+	private DeleteHITsById deleteHITsById;
 
 	@Autowired
 	private CreateMTurkQualificationType createQualType;
 
 	@Autowired
 	private GetMTurkQualifications getQualResults;
+
+	@Autowired
+	private CreateMTurkQualAndHits createQualAndHits;
 
 	@Autowired
 	private MTurkProperties properties;
@@ -39,18 +48,24 @@ public class MTurkAdminCW implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		if (properties.getFunction().equalsIgnoreCase("create")) {
-			mturk.createHits();
+		if (properties.getFunction().equalsIgnoreCase("createhits")) {
+			mturk.createHits(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("get")) {
-			getSubmittedHITs.getSubmittedAssignments();
+			getSubmittedHITs.getSubmittedAssignments(properties);
+		} else if (properties.getFunction().equalsIgnoreCase("approveallhits")) {
+			approveHITs.approveAssignments(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("approve")) {
-			approveHITs.approveAssignments();
+			approveAndRejectHITs.approveAssignments(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("deletebyqual")) {
-			deleteHITsByQualification.deleteAssignments();
+			deleteHITsByQualification.deleteAssignments(properties);
+		} else if (properties.getFunction().equalsIgnoreCase("deletebyid")) {
+			deleteHITsById.deleteHITsById(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("createqual")) {
-			createQualType.createQualification();
+			createQualType.createQualification(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("getqual")) {
-			getQualResults.getQualifications();
+			getQualResults.getQualifications(properties);
+		} else if (properties.getFunction().equalsIgnoreCase("create")) {
+			createQualAndHits.createHits(properties);
 		}
 	}
 

@@ -14,12 +14,9 @@ import com.amazonaws.services.mturk.model.Qualification;
 public class GetMTurkQualifications {
 
 	@Autowired
-	private MTurkProperties properties;
-
-	@Autowired
 	private MTurkClientHelper clientHelper;
 
-	public void getQualifications() throws IOException {
+	public void getQualifications(MTurkProperties properties) throws IOException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
 		// List workers that qualify

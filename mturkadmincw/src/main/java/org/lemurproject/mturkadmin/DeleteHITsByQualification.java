@@ -36,28 +36,14 @@ public class DeleteHITsByQualification {
 	@Autowired
 	private MTurkClientHelper clientHelper;
 
-	@Autowired
-	private MTurkProperties properties;
-
-	public void deleteAssignments()
+	public void deleteAssignments(MTurkProperties properties)
 			throws ParserConfigurationException, SAXException, IOException, InterruptedException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
-//		List<HIT> hitResults = new ArrayList<HIT>();
-//		boolean moreResults = true;
-//		while (moreResults == true) {
 		ListHITsForQualificationTypeRequest listHITsRequest = new ListHITsForQualificationTypeRequest();
 		listHITsRequest.setQualificationTypeId(properties.getQualificationType());
 		listHITsRequest.setMaxResults(100);
 		ListHITsForQualificationTypeResult listHitResult = client.listHITsForQualificationType(listHITsRequest);
-//			if (listHitResult.getHITs().size() > 0) {
-//				hitResults.addAll(listHitResult.getHITs());
-//				System.out.println("adding HIT results");
-//			} else {
-//				moreResults = false;
-//				System.out.println("No more Results");
-//			}
-//		}
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

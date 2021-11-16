@@ -2,7 +2,6 @@ package org.lemurproject.mturkadmin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -19,7 +18,6 @@ import com.amazonaws.services.mturk.model.Assignment;
 import com.amazonaws.services.mturk.model.AssignmentStatus;
 import com.amazonaws.services.mturk.model.ListAssignmentsForHITRequest;
 import com.amazonaws.services.mturk.model.ListAssignmentsForHITResult;
-import com.amazonaws.services.mturk.model.RejectAssignmentRequest;
 
 @Component
 public class ApproveHITs {
@@ -28,18 +26,18 @@ public class ApproveHITs {
 	private MTurkClientHelper clientHelper;
 
 	@Autowired
-	private MTurkProperties properties;
+	private MTurkFilenameHelper filenameHelper;
 
-	public void approveAssignments()
+	public void approveAssignments(MTurkProperties properties)
 			throws ParserConfigurationException, SAXException, IOException, InterruptedException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
-		Scanner scanner = new Scanner(new File(properties.getHitFilename()));
+		// Scanner scanner = new Scanner(new File(filenameHelper.getHitFilename()));
+		Scanner scanner = new Scanner(new File("hitids_20211031_1_prod.csv"));
 		if (scanner.hasNext()) {
 			scanner.next();
 		}
 
-		List<JudgedDocumentObject> judgedDocuments = new ArrayList<JudgedDocumentObject>();
 		// for (HIT hit : listHitResult.getHITs()) {
 		while (scanner.hasNext()) {
 			// String hitId = hit.getHITId();
@@ -56,21 +54,12 @@ public class ApproveHITs {
 
 			for (Assignment asn : assignmentList) {
 				// Approve the assignment
-				if (asn.getWorkerId().equalsIgnoreCase("A2UIGDOLX5RV95")) {
-					RejectAssignmentRequest rejectRequest = new RejectAssignmentRequest();
-					rejectRequest.setAssignmentId(asn.getAssignmentId());
-					rejectRequest.setRequesterFeedback(
-							"Rejected, the same query was entered multiple times and matched the qualifying query.");
-					client.rejectAssignment(rejectRequest);
-					System.out.println("Assignment has been rejected: " + asn.getAssignmentId());
-				} else {
-					ApproveAssignmentRequest approveRequest = new ApproveAssignmentRequest();
-					approveRequest.setAssignmentId(asn.getAssignmentId());
-					approveRequest.setRequesterFeedback("Good work, thank you!");
-					approveRequest.setOverrideRejection(false);
-					client.approveAssignment(approveRequest);
-					System.out.println("Assignment has been approved: " + asn.getAssignmentId());
-				}
+				ApproveAssignmentRequest approveRequest = new ApproveAssignmentRequest();
+				approveRequest.setAssignmentId(asn.getAssignmentId());
+				approveRequest.setRequesterFeedback("Good work, thank you!");
+				approveRequest.setOverrideRejection(false);
+				client.approveAssignment(approveRequest);
+				System.out.println("Assignment has been approved: " + asn.getAssignmentId());
 			}
 		}
 		scanner.close();

@@ -2,9 +2,17 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.lemurproject</groupId>
-	<artifactId>mturkcreatehits</artifactId>
+	<groupId>org.lemurproject.mturkadmin</groupId>
+	<artifactId>mturkadmincw</artifactId>
 	<version>1.0</version>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.2.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,42 +60,11 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>11</source>
-					<target>11</target>
-					<testSource>11</testSource>
-					<testTarget>11</testTarget>
-					<showDeprecation>true</showDeprecation>
-					<compilerArgument>-Xlint:unchecked</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>org.lemurproject.mturkcreatehit.MTurkCreateHits</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-my-jar-with-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+		    <plugin>
+		        <groupId>org.springframework.boot</groupId>
+		        <artifactId>spring-boot-maven-plugin</artifactId>
+		        <version>2.4.0</version>
+		    </plugin>
 		</plugins>
 	</build>
 </project>

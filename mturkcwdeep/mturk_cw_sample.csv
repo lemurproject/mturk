@@ -1,0 +1,4 @@
+queryNum,query,hitCount,isLast,pdf,docId,score,workerId,mturkHitId
+999, <span>Largest cities in the world</span>,HIT number 1 of 3,FALSE,LargestCities1.pdf,CW_sample_1,0,,
+999, <span>Largest cities in the world</span>,HIT number 2 of 3,FALSE,LargestCities2.pdf,CW_sample_2,0,,
+999, <span>Largest cities in the world</span>,HIT number 3 of 3,FALSE,LargestCities3.pdf,CW_sample_3,0,,

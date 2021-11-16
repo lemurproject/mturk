@@ -14,6 +14,12 @@ public class MTurkProperties {
 	@Value("${environment}")
 	private String environment;
 
+	@Value("${experimentpath}")
+	private String experimentpath;
+
+	@Value("${filename}")
+	private String filename;
+
 	@Value("${question.filename}")
 	private String questionFilename;
 
@@ -32,14 +38,17 @@ public class MTurkProperties {
 	@Value("${qualification.answerkey}")
 	private String qualificationAnswerkey;
 
-	@Value("${hit.filename}")
-	private String hitFilename;
-
 	@Value("${hit.price}")
 	private String hitPrice;
 
-	@Value("${judgeddocuments.csv}")
-	private String judgedDocumentsCsvName;
+	@Value("${hit.number}")
+	private String hitNumber;
+
+	@Value("${hit.assignments}")
+	private String hitAssignments;
+
+	@Value("${hit.lifetime.hours}")
+	private String hitLifetimeHours;
 
 	public String getQuestionFilename() {
 		return questionFilename;
@@ -65,28 +74,12 @@ public class MTurkProperties {
 		this.function = function;
 	}
 
-	public String getJudgedDocumentsCsvName() {
-		return judgedDocumentsCsvName;
-	}
-
-	public void setJudgedDocumentsCsvName(String judgedDocumentsCsvName) {
-		this.judgedDocumentsCsvName = judgedDocumentsCsvName;
-	}
-
 	public String getEnvironment() {
 		return environment;
 	}
 
 	public void setEnvironment(String environment) {
 		this.environment = environment;
-	}
-
-	public String getHitFilename() {
-		return hitFilename;
-	}
-
-	public void setHitFilename(String hitFilename) {
-		this.hitFilename = hitFilename;
 	}
 
 	public String getQualificationScore() {
@@ -127,6 +120,46 @@ public class MTurkProperties {
 
 	public void setHitPrice(String hitPrice) {
 		this.hitPrice = hitPrice;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getHitNumber() {
+		return hitNumber;
+	}
+
+	public void setHitNumber(String hitNumber) {
+		this.hitNumber = hitNumber;
+	}
+
+	public String getHitAssignments() {
+		return hitAssignments;
+	}
+
+	public void setHitAssignments(String hitAssignments) {
+		this.hitAssignments = hitAssignments;
+	}
+
+	public String getHitLifetimeHours() {
+		return hitLifetimeHours;
+	}
+
+	public void setHitLifetimeHours(String hitLifetimeHours) {
+		this.hitLifetimeHours = hitLifetimeHours;
+	}
+
+	public String getExperimentpath() {
+		return experimentpath;
+	}
+
+	public void setExperimentpath(String experimentpath) {
+		this.experimentpath = experimentpath;
 	}
 
 }

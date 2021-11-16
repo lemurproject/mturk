@@ -1,0 +1,3 @@
+HITid,AssignmentId,WorkerId,Time of Day,Day of Week,Start Time,End Time,Time,Minutes,Input Time (s),Query Time (s),Query,Category,doc1id,doc1selected,doc2id,doc2selected,doc3id,doc3selected,doc4id,doc4selected,doc5id,doc5selected,doc6id,doc6selected,doc7id,doc7selected,doc8id,doc8selected,doc9id,doc9selected,doc10id,doc10selected,doc11id,doc11selected,doc12id,doc12selected,doc13id,doc13selected,Num Relevant Selected,Num NR Selected
+HITid,AssignmentId,WorkerId,Category,Query,Num Selected,Num NR Selected,Reject
+3VGET1QS04FNT16LTH5HDQ73FV3W7E,3TAYZSBPLQOQN3Q0T2KM8UJYU1NS2T,A23KAJRDVCVGOE," Style"," Best hats for bald men",0,0,a
