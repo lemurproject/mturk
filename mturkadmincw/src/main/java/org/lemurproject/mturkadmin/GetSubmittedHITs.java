@@ -62,7 +62,7 @@ public class GetSubmittedHITs {
 	@Autowired
 	private MTurkFilenameHelper filenameHelper;
 
-	public void getSubmittedAssignments(MTurkProperties properties)
+	public void getSubmittedAssignments(MTurkProperties properties, String status)
 			throws ParserConfigurationException, SAXException, IOException, InterruptedException {
 		AmazonMTurk client = clientHelper.getClient(properties.getEnvironment());
 
@@ -100,7 +100,7 @@ public class GetSubmittedHITs {
 				QueryResponseObject response = new QueryResponseObject();
 				assignmentStatus = asn.getAssignmentStatus();
 
-				if (assignmentStatus.equalsIgnoreCase("Submitted") || assignmentStatus.equalsIgnoreCase("Approved")) {
+				if (assignmentStatus.equalsIgnoreCase(status)) {
 					long startTime = asn.getAcceptTime().getTime();
 					LocalDateTime date = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
 							.toLocalDateTime();
@@ -275,8 +275,11 @@ public class GetSubmittedHITs {
 					response.setNumNRselected(String.valueOf(numNRSelected));
 					responses.add(response);
 					System.out.println("HIT id: " + hitId + " submitted with assignment Id: " + asn.getAssignmentId());
-					hitDataWriter.write(response.getCsvValues());
-					shortDataWriter.write(response.getCsvValuesShort());
+					if (status.equalsIgnoreCase("Sumbitted")) {
+						shortDataWriter.write(response.getCsvValuesShort());
+					} else {
+						hitDataWriter.write(response.getCsvValues());
+					}
 					// Thread.sleep(1000);
 				}
 			}

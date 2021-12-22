@@ -62,7 +62,7 @@
 </head>
 <body class="formstyle">
 	<form:form
-		action="https://www.mturk.com/mturk/externalSubmit"
+		action="${searchResult.submitUrl}"
 		method="post" modelAttribute="searchResult">
 		<form:input path="assignmentId" type="hidden"
 			value="${searchResult.assignmentId}" />

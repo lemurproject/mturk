@@ -28,6 +28,9 @@ public class CWProperties {
 	@Value("${bertUrl}")
 	private String bertUrl;
 
+	@Value("${submitUrl}")
+	private String submitUrl;
+
 	public String getHostName() {
 		return hostName;
 	}
@@ -74,6 +77,14 @@ public class CWProperties {
 
 	public void setBertUrl(String bertUrl) {
 		this.bertUrl = bertUrl;
+	}
+
+	public String getSubmitUrl() {
+		return submitUrl;
+	}
+
+	public void setSubmitUrl(String submitUrl) {
+		this.submitUrl = submitUrl;
 	}
 
 }

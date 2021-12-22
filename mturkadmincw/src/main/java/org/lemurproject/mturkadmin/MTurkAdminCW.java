@@ -39,6 +39,9 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private CreateMTurkQualAndHits createQualAndHits;
 
 	@Autowired
+	private GetMTurkOpenHITs getOpenHits;
+
+	@Autowired
 	private MTurkProperties properties;
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -51,7 +54,11 @@ public class MTurkAdminCW implements CommandLineRunner {
 		if (properties.getFunction().equalsIgnoreCase("createhits")) {
 			mturk.createHits(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("get")) {
-			getSubmittedHITs.getSubmittedAssignments(properties);
+			getSubmittedHITs.getSubmittedAssignments(properties, "Submitted");
+		} else if (properties.getFunction().equalsIgnoreCase("getapproved")) {
+			getSubmittedHITs.getSubmittedAssignments(properties, "Approved");
+		} else if (properties.getFunction().equalsIgnoreCase("getrejected")) {
+			getSubmittedHITs.getSubmittedAssignments(properties, "Rejected");
 		} else if (properties.getFunction().equalsIgnoreCase("approveallhits")) {
 			approveHITs.approveAssignments(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("approve")) {
@@ -66,6 +73,8 @@ public class MTurkAdminCW implements CommandLineRunner {
 			getQualResults.getQualifications(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("create")) {
 			createQualAndHits.createHits(properties);
+		} else if (properties.getFunction().equalsIgnoreCase("list")) {
+			getOpenHits.getQualifications(properties);
 		}
 	}
 

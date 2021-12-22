@@ -41,6 +41,7 @@ public class SearchResult {
 	private String assignmentId;
 	private long queryTime;
 	private long inputTime;
+	private String submitUrl;
 
 	public String getQuery() {
 		return query;
@@ -328,6 +329,14 @@ public class SearchResult {
 
 	public void setPrevDoc13selection(String prevDoc13selection) {
 		this.prevDoc13selection = prevDoc13selection;
+	}
+
+	public String getSubmitUrl() {
+		return submitUrl;
+	}
+
+	public void setSubmitUrl(String submitUrl) {
+		this.submitUrl = submitUrl;
 	}
 
 }

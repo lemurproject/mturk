@@ -26,6 +26,9 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 
+	@Autowired
+	private CWProperties searchProps;
+
 	private BufferedWriter trialResultWriter;
 
 	@GetMapping({ "/sampleSearch" })
@@ -89,20 +92,26 @@ public class SearchController {
 	}
 
 	@GetMapping({ "/searchcategories" })
-	public String searchcategories1(@RequestParam(name = "assignmentId") String assignmentId,
+	public String searchcategories1(@RequestParam(name = "assignmentId", required = false) String assignmentId,
 			HttpServletRequest request, Model model) throws FileNotFoundException {
 		SearchObject searchObject = new SearchObject();
 		List<String> categories = searchService.getSearchCategories();
 		long inputStart = System.currentTimeMillis();
-		model.addAttribute("categories", categories);
 		model.addAttribute("searchObject", searchObject);
 		model.addAttribute("assignmentId", assignmentId);
 		model.addAttribute("inputStart", inputStart);
-		return "searchcategories";
+		if (categories.size() > 0) {
+			model.addAttribute("categories", categories);
+			return "searchcategories";
+		} else {
+			model.addAttribute("category", "Any");
+			return "searchnocategories";
+		}
+
 	}
 
 	@PostMapping({ "/searchcategories" })
-	public String searchcategories2(@RequestParam(name = "assignmentId") String assignmentId,
+	public String searchcategories2(@RequestParam(name = "assignmentId", required = false) String assignmentId,
 			HttpServletRequest request, @ModelAttribute("searchResult") SearchResult searchResult, Model model)
 			throws FileNotFoundException {
 		SearchObject searchObject = new SearchObject();
@@ -171,51 +180,40 @@ public class SearchController {
 		return "results";
 	}
 
-	@GetMapping({ "/qualification1" })
-	public String getQualification1(HttpServletRequest request, Model model) throws SolrServerException, IOException {
-		SearchResult searchResult = searchService.qual1Search();
-		searchResult.setDescription("dangers of asbestos qualification");
-		searchResult.setAssignmentId("test ID");
-		model.addAttribute("searchResult", searchResult);
-		return "results";
-	}
-
-	@GetMapping({ "/qualification2" })
-	public String getQualification2(HttpServletRequest request, Model model) throws SolrServerException, IOException {
-		SearchResult searchResult = searchService.qual2Search();
-		searchResult.setDescription("civil rights movement qualification");
-		searchResult.setAssignmentId("test ID");
-		model.addAttribute("searchResult", searchResult);
-		return "results";
-	}
-
-	@GetMapping({ "/qualification3" })
-	public String getQualification3(HttpServletRequest request, Model model) throws SolrServerException, IOException {
-		SearchResult searchResult = searchService.qual3Search();
-		searchResult.setDescription("hobby store qualification");
-		searchResult.setAssignmentId("test ID");
-		model.addAttribute("searchResult", searchResult);
-		return "results";
-	}
-
-	@GetMapping({ "/qualification4" })
-	public String getQualification4(HttpServletRequest request, Model model) throws SolrServerException, IOException {
-		SearchResult searchResult = searchService.qual4Search();
-		searchResult.setDescription("hobby store qualification");
-		searchResult.setAssignmentId("test ID");
-		model.addAttribute("searchResult", searchResult);
-		return "results";
-	}
-
 	@PostMapping({ "/searchResultsBERT" })
 	public String getSearchResultsBERT(@ModelAttribute("searchObject") SearchObject prevSearchObject,
 			@RequestParam(name = "queryString") String query,
 			// @RequestParam(name = "queryDescription") String description,
-			@RequestParam(name = "category") String category, @RequestParam(name = "assignmentId") String assignmentId,
+			@RequestParam(name = "category") String category,
+			@RequestParam(name = "assignmentId", required = false) String assignmentId,
 			@RequestParam(name = "inputStart") long inputStart, HttpServletRequest request, Model model)
 			throws SolrServerException, IOException {
 		long startTime = System.currentTimeMillis();
+		String queryToLower = query.trim().toLowerCase();
+		if (queryToLower.equalsIgnoreCase(category)) {
+			SearchObject searchObject = new SearchObject();
+			List<String> categories = searchService.getSearchCategories();
+			long newInputStart = System.currentTimeMillis();
+			model.addAttribute("inputStart", newInputStart);
+			model.addAttribute("categories", categories);
+			model.addAttribute("searchObject", searchObject);
+			model.addAttribute("assignmentId", assignmentId);
+			model.addAttribute("errorMessage", "The query cannot match the category name.  Please try another search.");
+			return "searchcategories";
+		} else if (searchService.checkPreviousQueries(queryToLower)) {
+			SearchObject searchObject = new SearchObject();
+			List<String> categories = searchService.getSearchCategories();
+			long newInputStart = System.currentTimeMillis();
+			model.addAttribute("inputStart", newInputStart);
+			model.addAttribute("categories", categories);
+			model.addAttribute("searchObject", searchObject);
+			model.addAttribute("assignmentId", assignmentId);
+			model.addAttribute("errorMessage", "This query matches a previous one.  Please try another search.");
+			return "searchcategories";
+		}
+
 		SearchResult searchResult = searchService.bertSearch(query);
+		searchResult.setSubmitUrl(searchProps.getSubmitUrl());
 		long endTime = System.currentTimeMillis();
 		long queryTime = endTime - startTime;
 		long inputTime = startTime - inputStart;
@@ -263,27 +261,77 @@ public class SearchController {
 		} else if (searchResult.getDocuments() != null && searchResult.getDocuments().size() > 0) {
 			SearchObject searchObject = new SearchObject();
 			List<String> categories = searchService.getSearchCategories();
+			long newInputStart = System.currentTimeMillis();
+			model.addAttribute("inputStart", newInputStart);
 			model.addAttribute("categories", categories);
 			model.addAttribute("searchObject", searchObject);
 			model.addAttribute("assignmentId", assignmentId);
 			model.addAttribute("errorMessage",
-					"There were under 10 results for your query.  Please try another search");
+					"There were under 10 results for your query.  Please try another search.");
 			return "searchcategories";
 		} else {
 			SearchObject searchObject = new SearchObject();
 			List<String> categories = searchService.getSearchCategories();
+			long newInputStart = System.currentTimeMillis();
+			model.addAttribute("inputStart", newInputStart);
 			model.addAttribute("categories", categories);
 			model.addAttribute("searchObject", searchObject);
 			model.addAttribute("assignmentId", assignmentId);
-			model.addAttribute("errorMessage", "There were no results for your query.  Please try another search");
+			model.addAttribute("errorMessage", "There were no results for your query.  Please try another search.");
 			return "searchcategories";
 		}
 	}
 
-	@PostMapping({ "/testSubmitHIT" })
-	public String testSubmitHIT(HttpServletRequest request, @ModelAttribute("searchResult") SearchResult searchResult,
-			Model model) throws SolrServerException, IOException {
-		return "welcome";
+	@PostMapping({ "/submitResults" })
+	public String submitResults(HttpServletRequest request, @ModelAttribute("searchResult") SearchResult searchResult,
+			@RequestParam(name = "assignmentId") String assignmentId, Model model)
+			throws SolrServerException, IOException {
+		System.out.println("Submitted Results");
+		QueryResponseObject response = new QueryResponseObject();
+		response.setQuery(searchResult.getQuery());
+		response.setCategory(searchResult.getCategory());
+		response.setDoc1id(searchResult.getDocuments().get(0).getDocId());
+		response.setDoc1selected(searchResult.getDocuments().get(0).getSelected());
+		response.setDoc2id(searchResult.getDocuments().get(1).getDocId());
+		response.setDoc2selected(searchResult.getDocuments().get(1).getSelected());
+		response.setDoc3id(searchResult.getDocuments().get(2).getDocId());
+		response.setDoc3selected(searchResult.getDocuments().get(2).getSelected());
+		response.setDoc4id(searchResult.getDocuments().get(3).getDocId());
+		response.setDoc4selected(searchResult.getDocuments().get(3).getSelected());
+		response.setDoc5id(searchResult.getDocuments().get(4).getDocId());
+		response.setDoc5selected(searchResult.getDocuments().get(4).getSelected());
+		response.setDoc6id(searchResult.getDocuments().get(5).getDocId());
+		response.setDoc6selected(searchResult.getDocuments().get(5).getSelected());
+		response.setDoc7id(searchResult.getDocuments().get(6).getDocId());
+		response.setDoc7selected(searchResult.getDocuments().get(6).getSelected());
+		response.setDoc8id(searchResult.getDocuments().get(7).getDocId());
+		response.setDoc8selected(searchResult.getDocuments().get(7).getSelected());
+		response.setDoc9id(searchResult.getDocuments().get(8).getDocId());
+		response.setDoc9selected(searchResult.getDocuments().get(8).getSelected());
+		response.setDoc10id(searchResult.getDocuments().get(9).getDocId());
+		response.setDoc10selected(searchResult.getDocuments().get(9).getSelected());
+		response.setDoc11id(searchResult.getDocuments().get(10).getDocId());
+		response.setDoc11selected(searchResult.getDocuments().get(10).getSelected());
+		response.setDoc12id(searchResult.getDocuments().get(11).getDocId());
+		response.setDoc12selected(searchResult.getDocuments().get(11).getSelected());
+		response.setDoc13id(searchResult.getDocuments().get(12).getDocId());
+		response.setDoc13selected(searchResult.getDocuments().get(12).getSelected());
+
+		searchService.writeResults(response);
+
+		SearchObject searchObject = new SearchObject();
+		List<String> categories = searchService.getSearchCategories();
+		long inputStart = System.currentTimeMillis();
+		model.addAttribute("searchObject", searchObject);
+		model.addAttribute("assignmentId", assignmentId);
+		model.addAttribute("inputStart", inputStart);
+		if (categories.size() > 0) {
+			model.addAttribute("categories", categories);
+			return "searchcategories";
+		} else {
+			model.addAttribute("category", "Any");
+			return "searchnocategories";
+		}
 	}
 
 	@PostMapping({ "/searchResultsBERTTrial" })

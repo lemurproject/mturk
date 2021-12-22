@@ -1,10 +1,12 @@
 package org.lemurproject.cw;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringJoiner;
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 
@@ -48,6 +51,11 @@ public class SearchService {
 	private SynchronousQueue<String> gpuQueue;
 	private Map<String, String> responseMap;
 
+	private Writer dataWriter;
+	private List<String> previousQueries;
+
+	private AtomicInteger count;
+
 //	private static Socket clientSocket;
 //	private static PrintWriter out;
 //	private static BufferedReader in;
@@ -64,6 +72,7 @@ public class SearchService {
 		// define categories:
 		categories = new ArrayList<String>();
 		categories.add("Arts");
+		categories.add("Complete a task");
 		categories.add("Crafts & Hobbies");
 		categories.add("Economy & Finance");
 		categories.add("Education");
@@ -79,6 +88,7 @@ public class SearchService {
 		categories.add("Recreation");
 		categories.add("Science");
 		categories.add("Shopping");
+		categories.add("Solve a problem");
 		categories.add("Spirituality");
 		categories.add("Sports");
 		categories.add("Style");
@@ -88,17 +98,42 @@ public class SearchService {
 		gpuQueue = new SynchronousQueue<String>();
 		new GPURequestThread().start();
 		responseMap = new HashMap<String, String>();
+
+		QueryResponseObject testObject = new QueryResponseObject();
+		String shortFilename = "clueweb09queries.csv";
+		dataWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(shortFilename), "UTF8"));
+		dataWriter.write(testObject.getCsvHeaders());
+		dataWriter.flush();
+
+		previousQueries = new ArrayList<String>();
+		count = new AtomicInteger(1);
+	}
+
+	public boolean checkPreviousQueries(String query) {
+		boolean duplicate = false;
+		if (previousQueries.contains(query)) {
+			duplicate = true;
+		} else {
+			previousQueries.add(query);
+			if (previousQueries.size() > 100) {
+				previousQueries.remove(0);
+			}
+		}
+		return duplicate;
 	}
 
 	public List<String> getSearchCategories() {
 		List<String> searchCategories = new ArrayList<String>();
+		int currentCount = count.getAndIncrement();
 
-		while (searchCategories.size() < 5) {
-			Random rand = new Random();
-			int int_random = rand.nextInt(20);
-			String cat = categories.get(int_random);
-			if (!searchCategories.contains(cat)) {
-				searchCategories.add(cat);
+		if ((currentCount % 10) != 0) {
+			while (searchCategories.size() < 5) {
+				Random rand = new Random();
+				int int_random = rand.nextInt(20);
+				String cat = categories.get(int_random);
+				if (!searchCategories.contains(cat)) {
+					searchCategories.add(cat);
+				}
 			}
 		}
 
@@ -162,158 +197,6 @@ public class SearchService {
 		return searchResult;
 	}
 
-	public SearchResult qual1Search() throws IOException {
-		SearchResult searchResult = new SearchResult();
-		searchResult.setQuery("dangers of asbestos");
-
-		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual1results.json")));
-		Gson gson = new Gson();
-		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
-		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
-				}
-			}
-			doc.setTitle(titleText);
-
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			highlightText = String.join(" ", highlightText, "..");
-			doc.setHighlight(highlightText);
-
-		}
-		searchResult.setDocuments(Arrays.asList(docs));
-//		} catch (Exception e) {
-//			System.out.println("No resulsts for query: " + query);
-//		}
-		return searchResult;
-	}
-
-	public SearchResult qual2Search() throws IOException {
-		SearchResult searchResult = new SearchResult();
-		searchResult.setQuery("civil rights movement");
-
-		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual2results.json")));
-		Gson gson = new Gson();
-		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
-		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
-				}
-			}
-			doc.setTitle(titleText);
-
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			highlightText = String.join(" ", highlightText, "..");
-			doc.setHighlight(highlightText);
-
-		}
-		searchResult.setDocuments(Arrays.asList(docs));
-//		} catch (Exception e) {
-//			System.out.println("No resulsts for query: " + query);
-//		}
-		return searchResult;
-	}
-
-	public SearchResult qual3Search() throws IOException {
-		SearchResult searchResult = new SearchResult();
-		searchResult.setQuery("hobby stores");
-
-		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual3results.json")));
-		Gson gson = new Gson();
-		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
-		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
-				}
-			}
-			doc.setTitle(titleText);
-
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			highlightText = String.join(" ", highlightText, "..");
-			doc.setHighlight(highlightText);
-
-		}
-		searchResult.setDocuments(Arrays.asList(docs));
-//		} catch (Exception e) {
-//			System.out.println("No resulsts for query: " + query);
-//		}
-		return searchResult;
-	}
-
-	public SearchResult qual4Search() throws IOException {
-		SearchResult searchResult = new SearchResult();
-		searchResult.setQuery("Hiking in Yosemite National Park");
-
-		String jsonString = new String(Files.readAllBytes(Paths.get("/home/cmw2/ClueWeb21/qual4results.json")));
-		Gson gson = new Gson();
-		DocumentResult[] docs = gson.fromJson(jsonString, DocumentResult[].class);
-		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex > 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
-				}
-			}
-			doc.setTitle(titleText);
-
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			highlightText = String.join(" ", highlightText, "..");
-			doc.setHighlight(highlightText);
-
-		}
-		searchResult.setDocuments(Arrays.asList(docs));
-//		} catch (Exception e) {
-//			System.out.println("No resulsts for query: " + query);
-//		}
-		return searchResult;
-	}
-
 	private class GPURequestThread extends Thread {
 		@Override
 		public void run() {
@@ -344,6 +227,7 @@ public class SearchService {
 
 	public SearchResult bertSearch(String queryString) throws IOException {
 		SearchResult searchResult = new SearchResult();
+		queryString = queryString.replaceAll("\\p{Punct}", "");
 		searchResult.setQuery(queryString);
 
 //		String url = searchProps.getBertUrl();
@@ -371,7 +255,7 @@ public class SearchService {
 		String resp = responseMap.get(queryString);
 		long endTime = System.currentTimeMillis();
 		long delta = endTime - startTime;
-		System.out.println("Query Time: " + delta);
+		System.out.println("Query: " + queryString + " Query Time: " + delta);
 
 		Gson gson = new Gson();
 		// try {
@@ -405,6 +289,15 @@ public class SearchService {
 //			System.out.println("No resulsts for query: " + query);
 //		}
 		return searchResult;
+	}
+
+	public void writeResults(QueryResponseObject response) {
+		try {
+			dataWriter.write(response.getCsvValues());
+			dataWriter.flush();
+		} catch (IOException e) {
+			System.out.println("Could not write query: " + response.getQuery());
+		}
 	}
 
 	public SearchResult getSampleResults(String queryString) {
