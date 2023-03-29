@@ -42,6 +42,9 @@ public class MTurkAdminCW implements CommandLineRunner {
 	private GetMTurkOpenHITs getOpenHits;
 
 	@Autowired
+	private GetMTurkApprovedHITs getApprovedHits;
+
+	@Autowired
 	private MTurkProperties properties;
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -75,6 +78,8 @@ public class MTurkAdminCW implements CommandLineRunner {
 			createQualAndHits.createHits(properties);
 		} else if (properties.getFunction().equalsIgnoreCase("list")) {
 			getOpenHits.getQualifications(properties);
+		} else if (properties.getFunction().equalsIgnoreCase("listapproved")) {
+			getApprovedHits.getAllApprovedHITs(properties);
 		}
 	}
 

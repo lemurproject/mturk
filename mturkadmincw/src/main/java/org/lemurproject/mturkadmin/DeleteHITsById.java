@@ -101,24 +101,23 @@ public class DeleteHITsById {
 					client.approveAssignment(approveRequest);
 					System.out.println("Assignment has been approved: " + asn.getAssignmentId());
 
-				} else {
-					try {
-						UpdateExpirationForHITRequest updateHITRequest = new UpdateExpirationForHITRequest();
-						updateHITRequest.setHITId(hitId);
-						// updateHITRequest.setExpireAt(new Date(0l));
-						Date date = new GregorianCalendar(2020, 11, 30).getTime();
-						updateHITRequest.setExpireAt(date);
-						client.updateExpirationForHIT(updateHITRequest);
-						System.out.println("Expired HIT: " + hitId);
-
-						DeleteHITRequest deleteHITRequest = new DeleteHITRequest();
-						deleteHITRequest.setHITId(hitId);
-						client.deleteHIT(deleteHITRequest);
-						System.out.println("Deleted: " + hitId);
-					} catch (Exception e) {
-						System.out.println("Could not delte HIT: " + hitId);
-					}
 				}
+			}
+			try {
+				UpdateExpirationForHITRequest updateHITRequest = new UpdateExpirationForHITRequest();
+				updateHITRequest.setHITId(hitId);
+				// updateHITRequest.setExpireAt(new Date(0l));
+				Date date = new GregorianCalendar(2020, 11, 30).getTime();
+				updateHITRequest.setExpireAt(date);
+				client.updateExpirationForHIT(updateHITRequest);
+				System.out.println("Expired HIT: " + hitId);
+
+				DeleteHITRequest deleteHITRequest = new DeleteHITRequest();
+				deleteHITRequest.setHITId(hitId);
+				client.deleteHIT(deleteHITRequest);
+				System.out.println("Deleted: " + hitId);
+			} catch (Exception e) {
+				System.out.println("Could not delte HIT: " + hitId);
 			}
 		}
 	}

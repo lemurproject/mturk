@@ -73,14 +73,17 @@
 			value="${searchResult.category}" />
 		<form:input path="queryTime" type="hidden"
 			value="${searchResult.queryTime}" />
-			<form:input path="inputTime" type="hidden"
+		<form:input path="inputTime" type="hidden"
 			value="${searchResult.inputTime}" />
+		<form:input path="filteredDocs" type="hidden"
+			value="${searchResult.filteredDocs}" />
 		<div align="left">
 			<label>Searched for: </label>&nbsp;&nbsp;
 			<form:input path="query" size="100" disabled="true" />
 		</div>
 		<div class="instructionstyle"> 
 		Place a check mark next to every result that you would open. <br/>
+		Please note the results are in RANDOM order. <br/>
 		</div>
 		<hr />
 		<table class="tablestyle">
@@ -89,6 +92,8 @@
 				varStatus="tagStatus">
 				<form:input path="documents[${tagStatus.index}].docId" type="hidden"
 					value="${document.docId}" />
+				<form:input path="documents[${tagStatus.index}].score" type="hidden"
+					value="${document.score}" />
 				<tr>
 					<td></td>
 					<td class="cellstyle"><div class="urlstyle">${document.url}</div></td>

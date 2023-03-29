@@ -1,6 +1,10 @@
 package org.lemurproject.mturkadmin;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,10 @@ public class GetMTurkOpenHITs {
 		ListHITsResult hitsResult = client.listHITs(listHitsReq);
 		for (HIT hit : hitsResult.getHITs()) {
 			String hitId = hit.getHITId();
+			long hitTime = hit.getCreationTime().getTime();
+			LocalDateTime date = Instant.ofEpochMilli(hitTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+			System.out.println("HIT date: " + formatter.format(date));
 			ListAssignmentsForHITRequest listHITRequest = new ListAssignmentsForHITRequest();
 			listHITRequest.setHITId(hitId);
 

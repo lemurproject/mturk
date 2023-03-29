@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class SearchService {
 	private Map<String, String> responseMap;
 
 	private Writer dataWriter;
-	private List<String> previousQueries;
+	// private List<String> previousQueries;
 
 	private AtomicInteger count;
 
@@ -105,22 +104,22 @@ public class SearchService {
 		dataWriter.write(testObject.getCsvHeaders());
 		dataWriter.flush();
 
-		previousQueries = new ArrayList<String>();
+		// previousQueries = new ArrayList<String>();
 		count = new AtomicInteger(1);
 	}
 
-	public boolean checkPreviousQueries(String query) {
-		boolean duplicate = false;
-		if (previousQueries.contains(query)) {
-			duplicate = true;
-		} else {
-			previousQueries.add(query);
-			if (previousQueries.size() > 100) {
-				previousQueries.remove(0);
-			}
-		}
-		return duplicate;
-	}
+//	public boolean checkPreviousQueries(String query) {
+//		boolean duplicate = false;
+//		if (previousQueries.contains(query)) {
+//			duplicate = true;
+//		} else {
+//			previousQueries.add(query);
+//			if (previousQueries.size() > 100) {
+//				previousQueries.remove(0);
+//			}
+//		}
+//		return duplicate;
+//	}
 
 	public List<String> getSearchCategories() {
 		List<String> searchCategories = new ArrayList<String>();
@@ -186,7 +185,7 @@ public class SearchService {
 			searchResult.setDocId(docId);
 			searchResult.setTitle((String) results.get(i).get("title"));
 			searchResult.setUrl((String) results.get(i).get("url"));
-			searchResult.setScore((Float) results.get(i).get("score"));
+			searchResult.setScore((String) results.get(i).get("score"));
 			searchResult.setHighlight(String.join("", highlightText, "..."));
 			documentResults.add(searchResult);
 		}
@@ -230,17 +229,6 @@ public class SearchService {
 		queryString = queryString.replaceAll("\\p{Punct}", "");
 		searchResult.setQuery(queryString);
 
-//		String url = searchProps.getBertUrl();
-//		String resp = null;
-//		String query = queryString.replace(" ", "%20");
-//		HttpGet addTopicRequest = new HttpGet(String.join("", url, query));
-//		try (CloseableHttpResponse response = httpClient.execute(addTopicRequest)) {
-//			resp = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
-//			// System.out.println(resp);
-//		} catch (Exception e) {
-//			System.out.println("Failed");
-//		}
-
 		// Poll response map
 		long startTime = System.currentTimeMillis();
 		try {
@@ -260,31 +248,40 @@ public class SearchService {
 		Gson gson = new Gson();
 		// try {
 		DocumentResult[] docs = gson.fromJson(resp, DocumentResult[].class);
+		List<DocumentResult> viewableDocs = new ArrayList<DocumentResult>();
+		StringJoiner filteredDocsBuffer = new StringJoiner(",");
 		for (DocumentResult doc : docs) {
-			String titleText = doc.getTitle();
-			titleText = titleText.replaceAll("<b>", "");
-			titleText = titleText.replaceAll("</b>", "");
-			titleText = titleText.replaceAll("em>", "b>");
-			titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+			if (doc.getFiltered()) {
+				filteredDocsBuffer.add(doc.getDocId());
+			} else {
+				String titleText = doc.getTitle();
+				titleText = titleText.replaceAll("<b>", "");
+				titleText = titleText.replaceAll("</b>", "");
+				titleText = titleText.replaceAll("em>", "b>");
+				titleText = titleText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
 
-			if (titleText.length() > 100) {
-				int endIndex = titleText.indexOf(" ", 100);
-				if (endIndex >= 100) {
-					titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+				if (titleText.length() > 100) {
+					int endIndex = titleText.indexOf(" ", 100);
+					if (endIndex >= 100) {
+						titleText = String.join(" ", titleText.substring(0, endIndex), "...");
+					}
 				}
-			}
-			doc.setTitle(titleText);
+				doc.setTitle(titleText);
 
-			String highlightText = doc.getHighlight();
-			highlightText = highlightText.replaceAll("<b>", "");
-			highlightText = highlightText.replaceAll("</b>", "");
-			highlightText = highlightText.replaceAll("em>", "b>");
-			highlightText = highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
-			highlightText = String.join(" ", highlightText, "..");
-			doc.setHighlight(highlightText);
+				String highlightText = doc.getHighlight();
+				highlightText = highlightText.replaceAll("<b>", "");
+				highlightText = highlightText.replaceAll("</b>", "");
+				highlightText = highlightText.replaceAll("em>", "b>");
+				// highlightText =
+				// highlightText.replaceAll("[^a-zA-Z0-9-+.^:;{},\'$&%#@*()=?!<>/ ]", "");
+				highlightText = String.join(" ", highlightText, "..");
+				doc.setHighlight(highlightText);
+				viewableDocs.add(doc);
+			}
 
 		}
-		searchResult.setDocuments(Arrays.asList(docs));
+		searchResult.setDocuments(viewableDocs);
+		searchResult.setFilteredDocs(filteredDocsBuffer.toString());
 //		} catch (Exception e) {
 //			System.out.println("No resulsts for query: " + query);
 //		}
@@ -321,7 +318,7 @@ public class SearchService {
 			documentResult.setDocId(docId);
 			documentResult.setTitle(String.join("", "Doc Title ", String.valueOf(i)));
 			documentResult.setUrl(urls.get(i));
-			documentResult.setScore(Float.valueOf(i));
+			documentResult.setScore(String.valueOf(i));
 			documentResult.setHighlight(String.join("", "Doc Snippet ", String.valueOf(i),
 					" lalalalalalalla lalalalalal lalalalalalala lalalalalala lalalalalalalala lalalalalalala lalalalalala llalalala lalalalalalala lalalalalalala lalalalalalala lalalalalla lalala"));
 			documentResults.add(documentResult);

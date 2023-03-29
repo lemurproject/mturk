@@ -42,6 +42,7 @@ public class SearchResult {
 	private long queryTime;
 	private long inputTime;
 	private String submitUrl;
+	private String filteredDocs;
 
 	public String getQuery() {
 		return query;
@@ -337,6 +338,14 @@ public class SearchResult {
 
 	public void setSubmitUrl(String submitUrl) {
 		this.submitUrl = submitUrl;
+	}
+
+	public String getFilteredDocs() {
+		return filteredDocs;
+	}
+
+	public void setFilteredDocs(String filteredDocs) {
+		this.filteredDocs = filteredDocs;
 	}
 
 }

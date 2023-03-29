@@ -8,15 +8,16 @@ public class DocumentResult {
 	private String docId;
 	private String title;
 	private String url;
-	private Float score;
+	private String score;
 	private String highlight;
 	private Boolean selected;
+	private Boolean filtered;
 
-	public Float getScore() {
+	public String getScore() {
 		return score;
 	}
 
-	public void setScore(Float score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 
@@ -58,6 +59,14 @@ public class DocumentResult {
 
 	public void setHighlight(String highlight) {
 		this.highlight = highlight;
+	}
+
+	public Boolean getFiltered() {
+		return filtered;
+	}
+
+	public void setFiltered(Boolean filtered) {
+		this.filtered = filtered;
 	}
 
 }

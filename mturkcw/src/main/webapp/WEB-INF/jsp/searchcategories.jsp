@@ -134,7 +134,7 @@ $( document ).ready(function() {
 		<div id="searchdiv">
 		<div align="center" class="divstyle">
 			<div class="spanstyle">
-				<b>Enter a <span class="categorystyle" id="catname"></span> query.  Please note, the web pages are from <span class="categorystyle">2009</span>,<br/> and this search engine does not
+				<b>Enter a <span class="categorystyle" id="catname"></span> query.  Please note, the web pages are from <span class="categorystyle">2022</span>,<br/> and this search engine does not
 					have your location information.</b>
 			</div>
 			<form:input path="queryString" size="100" id="queryInput" />

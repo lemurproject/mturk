@@ -91,15 +91,20 @@ public class GetSubmittedHITs {
 
 			// Get a maximum of 10 completed assignments for this HIT
 			listHITRequest.setMaxResults(100);
-			ListAssignmentsForHITResult listHITResult = client.listAssignmentsForHIT(listHITRequest);
-			List<Assignment> assignmentList = listHITResult.getAssignments();
+			List<Assignment> assignmentList = new ArrayList<Assignment>();
+			try {
+				ListAssignmentsForHITResult listHITResult = client.listAssignmentsForHIT(listHITRequest);
+				assignmentList = listHITResult.getAssignments();
+			} catch (Exception e) {
+				System.out.println("No HIT: " + hitId);
+			}
 
 			// Iterate through all the assignments received
 			String assignmentStatus = "";
 			for (Assignment asn : assignmentList) {
+
 				QueryResponseObject response = new QueryResponseObject();
 				assignmentStatus = asn.getAssignmentStatus();
-
 				if (assignmentStatus.equalsIgnoreCase(status)) {
 					long startTime = asn.getAcceptTime().getTime();
 					LocalDateTime date = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
@@ -120,167 +125,206 @@ public class GetSubmittedHITs {
 					int numNRSelected = 0;
 					int numRelevantSelected = 0;
 
-					Document doc = dBuilder.parse(new InputSource(new StringReader(asn.getAnswer())));
-					NodeList nList = doc.getElementsByTagName("Answer");
-					boolean NRdoc = false;
-					for (int i = 0; i < nList.getLength(); i++) {
-						Node nNode = nList.item(i);
-						if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-							Element eElement = (Element) nNode;
-							String questionIdentifier = eElement.getElementsByTagName("QuestionIdentifier").item(0)
-									.getTextContent();
-							String freeTextInput = eElement.getElementsByTagName("FreeText").item(0).getTextContent()
-									.trim();
-							if (freeTextInput.startsWith("nr-") || freeTextInput.startsWith("random-")) {
-								NRdoc = true;
-							} else if (freeTextInput.startsWith("clueweb09-")) {
-								NRdoc = false;
-							}
-							String freeText = String.join("", "\" ", freeTextInput, "\"");
-							// System.out.println(questionIdentifier + ": " + freeText);
+					if (asn.getAssignmentId().equals("3GA6AFUKOT4QIC83M8MSNQHOY8GH3X")) {
+						System.out.println("Problem Assignment");
+					}
+					if (asn.getAnswer() == null) {
+						System.out.println("  assignment: " + asn.getAssignmentId() + " in HIT " + hitId + " is null");
+					} else {
+						String answerString = asn.getAnswer();
+						// if (answerString.contains("<QuestionIdentifier>query</QuestionIdentifier>"))
+						// {
+						Document doc = dBuilder.parse(new InputSource(new StringReader(asn.getAnswer())));
+						NodeList nList = doc.getElementsByTagName("Answer");
+						boolean NRdoc = false;
+						for (int i = 0; i < nList.getLength(); i++) {
+							Node nNode = nList.item(i);
+							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+								Element eElement = (Element) nNode;
+								String questionIdentifier = eElement.getElementsByTagName("QuestionIdentifier").item(0)
+										.getTextContent();
+								String freeTextInput = eElement.getElementsByTagName("FreeText").item(0)
+										.getTextContent().trim();
+								if (freeTextInput.startsWith("nr-") || freeTextInput.startsWith("random-")) {
+									NRdoc = true;
+								} else if (freeTextInput.startsWith("clueweb22-")) {
+									NRdoc = false;
+								}
+								String freeText = String.join("", "\" ", freeTextInput, "\"");
+								// System.out.println(questionIdentifier + ": " + freeText);
 
-							if (questionIdentifier.equalsIgnoreCase("query")) {
-								response.setQuery(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("description")) {
-								response.setDescription(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("category")) {
-								response.setCategory(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("inputTime")) {
-								double inputTime = Double.valueOf(freeTextInput.trim()).doubleValue() / 1000d;
-								response.setInputTime(inputTime);
-							} else if (questionIdentifier.equalsIgnoreCase("queryTime")) {
-								double queryTime = Double.valueOf(freeTextInput.trim()).doubleValue() / 1000d;
-								response.setInputTime(queryTime);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[0].docId")) {
-								response.setDoc1id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[0].selected")) {
-								response.setDoc1selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[1].docId")) {
-								response.setDoc2id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[1].selected")) {
-								response.setDoc2selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[2].docId")) {
-								response.setDoc3id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[2].selected")) {
-								response.setDoc3selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[3].docId")) {
-								response.setDoc4id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[3].selected")) {
-								response.setDoc4selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[4].docId")) {
-								response.setDoc5id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[4].selected")) {
-								response.setDoc5selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[5].docId")) {
-								response.setDoc6id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[5].selected")) {
-								response.setDoc6selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[6].docId")) {
-								response.setDoc7id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[6].selected")) {
-								response.setDoc7selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[7].docId")) {
-								response.setDoc8id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[7].selected")) {
-								response.setDoc8selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[8].docId")) {
-								response.setDoc9id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[8].selected")) {
-								response.setDoc9selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[9].docId")) {
-								response.setDoc10id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[9].selected")) {
-								response.setDoc10selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[10].docId")) {
-								response.setDoc11id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[10].selected")) {
-								response.setDoc11selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[11].docId")) {
-								response.setDoc12id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[11].selected")) {
-								response.setDoc12selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
-							} else if (questionIdentifier.equalsIgnoreCase("documents[12].docId")) {
-								response.setDoc13id(freeText);
-							} else if (questionIdentifier.equalsIgnoreCase("documents[12].selected")) {
-								response.setDoc13selected(true);
-								if (NRdoc)
-									numNRSelected = numNRSelected + 1;
-								else
-									numRelevantSelected += 1;
-								NRdoc = false;
+								if (questionIdentifier.equalsIgnoreCase("query")) {
+									response.setQuery(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("description")) {
+									response.setDescription(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("category")) {
+									response.setCategory(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("filteredDocs")) {
+									response.setFilteredDocs(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("inputTime")) {
+									double inputTime = Double.valueOf(freeTextInput.trim()).doubleValue() / 1000d;
+									response.setInputTime(inputTime);
+								} else if (questionIdentifier.equalsIgnoreCase("queryTime")) {
+									double queryTime = Double.valueOf(freeTextInput.trim()).doubleValue() / 1000d;
+									response.setInputTime(queryTime);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[0].score")) {
+									response.setDoc1score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[0].docId")) {
+									response.setDoc1id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[0].selected")) {
+									response.setDoc1selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[1].score")) {
+									response.setDoc2score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[1].docId")) {
+									response.setDoc2id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[1].selected")) {
+									response.setDoc2selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[2].score")) {
+									response.setDoc3score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[2].docId")) {
+									response.setDoc3id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[2].selected")) {
+									response.setDoc3selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[3].score")) {
+									response.setDoc4score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[3].docId")) {
+									response.setDoc4id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[3].selected")) {
+									response.setDoc4selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[4].score")) {
+									response.setDoc5score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[4].docId")) {
+									response.setDoc5id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[4].selected")) {
+									response.setDoc5selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[5].score")) {
+									response.setDoc6score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[5].docId")) {
+									response.setDoc6id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[5].selected")) {
+									response.setDoc6selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[6].score")) {
+									response.setDoc7score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[6].docId")) {
+									response.setDoc7id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[6].selected")) {
+									response.setDoc7selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[7].score")) {
+									response.setDoc8score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[7].docId")) {
+									response.setDoc8id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[7].selected")) {
+									response.setDoc8selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[8].score")) {
+									response.setDoc9score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[8].docId")) {
+									response.setDoc9id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[8].selected")) {
+									response.setDoc9selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[9].score")) {
+									response.setDoc10score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[9].docId")) {
+									response.setDoc10id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[9].selected")) {
+									response.setDoc10selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[10].score")) {
+									response.setDoc11score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[10].docId")) {
+									response.setDoc11id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[10].selected")) {
+									response.setDoc11selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[11].score")) {
+									response.setDoc12score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[11].docId")) {
+									response.setDoc12id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[11].selected")) {
+									response.setDoc12selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								} else if (questionIdentifier.equalsIgnoreCase("documents[12].score")) {
+									response.setDoc13score(freeTextInput.trim());
+								} else if (questionIdentifier.equalsIgnoreCase("documents[12].docId")) {
+									response.setDoc13id(freeText);
+								} else if (questionIdentifier.equalsIgnoreCase("documents[12].selected")) {
+									response.setDoc13selected(true);
+									if (NRdoc)
+										numNRSelected = numNRSelected + 1;
+									else
+										numRelevantSelected += 1;
+									NRdoc = false;
+								}
 							}
 						}
-					}
-					response.setNumRelevantSelected(String.valueOf(numRelevantSelected));
-					response.setNumNRselected(String.valueOf(numNRSelected));
-					responses.add(response);
-					System.out.println("HIT id: " + hitId + " submitted with assignment Id: " + asn.getAssignmentId());
-					if (status.equalsIgnoreCase("Sumbitted")) {
-						shortDataWriter.write(response.getCsvValuesShort());
-					} else {
+						response.setNumRelevantSelected(String.valueOf(numRelevantSelected));
+						response.setNumNRselected(String.valueOf(numNRSelected));
+						responses.add(response);
+						// System.out.println("HIT id: " + hitId + " submitted with assignment Id: " +
+						// asn.getAssignmentId());
+						if (status.equalsIgnoreCase("Submitted")) {
+							shortDataWriter.write(response.getCsvValuesShort());
+						}
 						hitDataWriter.write(response.getCsvValues());
+						// Thread.sleep(1000);
 					}
-					// Thread.sleep(1000);
+					// }
 				}
 			}
 		}
