@@ -59,6 +59,7 @@ qualification.answerkey=qualification13_answerkey.xml -> The qualification answe
 ```
 
 Main functions of the Admin Application:
+
 <b>create:</b> This create both the qualification test and the HITs on Mturk.  The output of this is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
 
 # CAsT
