@@ -58,6 +58,9 @@ qualification.filename=qualification13.xml -> The qualification test file.  Loca
 qualification.answerkey=qualification13_answerkey.xml -> The qualification answer key.
 ```
 
+Main functions of the Admin Application:
+<b>create:</b> This create both the qualification test and the HITs on Mturk.  The output of this is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
+
 # CAsT
 ## Relevance Assessment Web Application (mturkcast)
 In the CAsT Mechanical Turk HIT, workers are shown a QA "conversation" at the top of the page and shown 5 short documents.  The worker is asked to assess how relevant each 
