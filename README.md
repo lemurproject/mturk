@@ -58,9 +58,11 @@ qualification.filename=qualification13.xml -> The qualification test file.  Loca
 qualification.answerkey=qualification13_answerkey.xml -> The qualification answer key.
 ```
 
-Main functions of the Admin Application:
+<b>Main functions of the Admin Application:</b>
 
-<b>create:</b> This create both the qualification test and the HITs on Mturk.  The output of this is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
+<b>create:</b> This creates both the qualification test and the HITs on Mturk.  The output of this function is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
+
+<b>get:</b> This gets all the submitted HITs.  The output of this function is full_judgeddocs_[filename].csv and short_judgeddocs_[filename].csv.  Full_judgeddocs lists all the queries and documents and whether they were selected as relevant.  This file can be converted to qrels.  Short_judgeddocs lists just the queries and how many documents were selected.  This file can be used to reject queries where the worker has entered a bad query or selected too many non-relevant documents by changing the a in the last column to r.
 
 # CAsT
 ## Relevance Assessment Web Application (mturkcast)
