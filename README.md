@@ -60,9 +60,31 @@ qualification.answerkey=qualification13_answerkey.xml -> The qualification answe
 
 <b>Main functions of the Admin Application:</b>
 
-<b>create:</b> This creates both the qualification test and the HITs on Mturk.  The output of this function is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
+<b>create:</b> This creates both the qualification test and the HITs on Mturk.  The qualification.name parameter needs to be unique for each experiment, or this will throw an error.  The output of this function is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
 
 <b>get:</b> This gets all the submitted HITs.  The output of this function is full_judgeddocs_[filename].csv and short_judgeddocs_[filename].csv.  Full_judgeddocs lists all the queries and documents and whether they were selected as relevant.  This file can be converted to qrels.  Short_judgeddocs lists just the queries and how many documents were selected.  This file can be used to reject queries where the worker has entered a bad query or selected too many non-relevant documents by changing the a in the last column to r.
+
+<b>approve:</b> This approves (and rejects) HITs based on the values in the short_judgeddocs * .csv file.
+
+<b>getapproved:</b>  This lists all the approved HITs for an experiment.  This is the final data, which can be used as Qrels.
+
+<b>deletebyqual:</b>  This is the easiest way to delete all HITs in an experiment because each experiment has a unique qualifier (even if the same qualification test is used.)  To look up the Qualification ID,  check column C of hitids_*_.csv
+
+<b>Other functions:</b>
+
+<b>getqual:</b>
+
+<b>createqual:</b>
+
+<b>getrejected:</b>
+
+<b>approveallhits:</b>
+
+
+
+
+
+<b>
 
 # CAsT
 ## Relevance Assessment Web Application (mturkcast)
