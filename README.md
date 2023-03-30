@@ -58,7 +58,7 @@ qualification.filename=qualification13.xml -> The qualification test file.  Loca
 qualification.answerkey=qualification13_answerkey.xml -> The qualification answer key.
 ```
 
-<b>Main functions of the Admin Application:</b>
+###Main functions of the Admin Application:
 
 <b>create:</b> This creates both the qualification test and the HITs on Mturk.  The qualification.name parameter needs to be unique for each experiment, or this will throw an error.  The output of this function is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
 
@@ -70,7 +70,7 @@ qualification.answerkey=qualification13_answerkey.xml -> The qualification answe
 
 <b>deletebyqual:</b>  This is the easiest way to delete all HITs in an experiment because each experiment has a unique qualifier (even if the same qualification test is used.)  To look up the Qualification ID,  check column C of hitids_*_.csv
 
-<b>Other functions:</b>
+###Other functions:
 
 <b>getqual:</b>
 
