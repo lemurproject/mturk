@@ -34,7 +34,57 @@ Here is an example of a json response to the query: dinosaur.
 We host our Mechanical Turk projects externally so that we can create multi page HITs and have more control over the data and how they look.  As a result we must be able to manage 
 our HITs programatically.  The administration application provides this functionality.
 
-To use the administration application, you can alter the application.properties file.  To see the main functionality, take a look at MTurkAdminCW main class.
+To use the administration application, you can alter the application.properties file.  To see the main functionality, take a look at MTurkAdminCW main class.  Amazon credentials also need to be set up to run MTurk admin tasks.
+
+The application.properties
+```
+function=[create|get|approve|deletebyqual]
+environment=[prod|sandbox]
+experimentpath=[path to experiment data] *optional 
+filename=[BASE_FILE_NAME].csv -> I usually make this a date.csv (e.g. 20230339.csv)
+
+#create hits parameters
+question.filename=externalquestion_cw.xml -> Can be a full path if .xml is not in the same directory
+hit.price=0.30 -> Price paid per HIT.  MTurk adds an additional 40% to this price (e.g. it costs us $0.42 for a $0.30 HIT)
+hit.number=10 -> The number of HITs each worker can complete
+hit.assignments=10 -> The number of workers that can do each HIT.  The total number of queries is hit.assignments * hit.number.
+hit.lifetime.hours=24 -> The number of hours the HIT is live.
+
+#Qualification parameters
+qualification.type=[Qualification ID] -> Only needed for createhits and deletebyqual functions.  Can be looked up in file: hitids_[FILENAME].csv
+qualification.score=4 -> The qualification test score the worker must score greater than or equal to.
+qualification.name=Stars:\ date\ 230328,\ 100\ HITs -> The name of the qualification (helpful for looking up qualifications on requester website.)
+qualification.filename=qualification13.xml -> The qualification test file.  Located on boston: /bos/www/htdocs/mturk/qualification/cw22/.
+qualification.answerkey=qualification13_answerkey.xml -> The qualification answer key.
+```
+
+### Main functions of the Admin Application:
+
+<b>create:</b> This creates both the qualification test and the HITs on Mturk.  The qualification.name parameter needs to be unique for each experiment, or this will throw an error.  The output of this function is: hitids_[filename].csv, which lists the HIT id, the date, and the qualification type code (the same for every HIT, but is useful to know if HITs need to be deleted.)
+
+<b>get:</b> This gets all the submitted HITs.  The output of this function is full_judgeddocs_[filename].csv and short_judgeddocs_[filename].csv.  Full_judgeddocs lists all the queries and documents and whether they were selected as relevant.  This file can be converted to qrels.  Short_judgeddocs lists just the queries and how many documents were selected.  This file can be used to reject queries where the worker has entered a bad query or selected too many non-relevant documents by changing the a in the last column to r.
+
+<b>approve:</b> This approves (and rejects) HITs based on the values in the short_judgeddocs * .csv file.
+
+<b>getapproved:</b>  This lists all the approved HITs for an experiment.  This is the final data, which can be used as Qrels.
+
+<b>deletebyqual:</b>  This is the easiest way to delete all HITs in an experiment because each experiment has a unique qualifier (even if the same qualification test is used.)  To look up the Qualification ID,  check column C of hitids_*_.csv
+
+### Other functions:
+
+<b>getqual:</b>
+
+<b>createqual:</b>
+
+<b>getrejected:</b>
+
+<b>approveallhits:</b>
+
+
+
+
+
+<b>
 
 # CAsT
 ## Relevance Assessment Web Application (mturkcast)
