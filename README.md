@@ -6,6 +6,13 @@ One application is the web application that displays the data to the mechanical 
 Mechanical Turk administration application that can create and delete HITs as well as get the HIT data from Amazon.
 
 # ClueWeb
+## Building MTurk applications
+The java mturk applications use Java 11 and Spring Boot.  The java build uses Maven.  To build any of the projects run:
+```
+maven clean install
+```
+This will output a jar (or war for web projects) in the target/ directory of the project.
+
 ## Relevance Assessment Web Application (mturkcw)
 In the ClueWeb Mechanical Turk HIT, workers are asked to select one of five random categories and enter a query pertaining to that category.  Once they submit, they are shown 
 the documents that are returned from search engine or reranker.  We use a BERT reranker, which runs on a gpu, on top of a BM25 initial ranking provided by Solr.  This logic 
