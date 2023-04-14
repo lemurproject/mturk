@@ -200,17 +200,17 @@ public class SearchController {
 			model.addAttribute("assignmentId", assignmentId);
 			model.addAttribute("errorMessage", "The query cannot match the category name.  Please try another search.");
 			return "searchcategories";
-		} // else if (searchService.checkPreviousQueries(queryToLower)) {
-//			SearchObject searchObject = new SearchObject();
-//			List<String> categories = searchService.getSearchCategories();
-//			long newInputStart = System.currentTimeMillis();
-//			model.addAttribute("inputStart", newInputStart);
-//			model.addAttribute("categories", categories);
-//			model.addAttribute("searchObject", searchObject);
-//			model.addAttribute("assignmentId", assignmentId);
-//			model.addAttribute("errorMessage", "This query matches a previous one.  Please try another search.");
-//			return "searchcategories";
-//		}
+		} else if (searchService.checkPreviousQueries(queryToLower)) {
+			SearchObject searchObject = new SearchObject();
+			List<String> categories = searchService.getSearchCategories();
+			long newInputStart = System.currentTimeMillis();
+			model.addAttribute("inputStart", newInputStart);
+			model.addAttribute("categories", categories);
+			model.addAttribute("searchObject", searchObject);
+			model.addAttribute("assignmentId", assignmentId);
+			model.addAttribute("errorMessage", "This query matches a previous one.  Please try another search.");
+			return "searchcategories";
+		}
 
 		SearchResult searchResult = searchService.bertSearch(query);
 		searchResult.setSubmitUrl(searchProps.getSubmitUrl());

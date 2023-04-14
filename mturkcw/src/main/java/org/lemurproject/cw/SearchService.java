@@ -51,7 +51,7 @@ public class SearchService {
 	private Map<String, String> responseMap;
 
 	private Writer dataWriter;
-	// private List<String> previousQueries;
+	private List<String> previousQueries;
 
 	private AtomicInteger count;
 
@@ -104,22 +104,22 @@ public class SearchService {
 		dataWriter.write(testObject.getCsvHeaders());
 		dataWriter.flush();
 
-		// previousQueries = new ArrayList<String>();
+		previousQueries = new ArrayList<String>();
 		count = new AtomicInteger(1);
 	}
 
-//	public boolean checkPreviousQueries(String query) {
-//		boolean duplicate = false;
-//		if (previousQueries.contains(query)) {
-//			duplicate = true;
-//		} else {
-//			previousQueries.add(query);
-//			if (previousQueries.size() > 100) {
-//				previousQueries.remove(0);
-//			}
-//		}
-//		return duplicate;
-//	}
+	public boolean checkPreviousQueries(String query) {
+		boolean duplicate = false;
+		if (previousQueries.contains(query)) {
+			duplicate = true;
+		} else {
+			previousQueries.add(query);
+			if (previousQueries.size() > 500) {
+				previousQueries.remove(0);
+			}
+		}
+		return duplicate;
+	}
 
 	public List<String> getSearchCategories() {
 		List<String> searchCategories = new ArrayList<String>();
